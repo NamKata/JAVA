@@ -1,0 +1,5 @@
+Buoc 1. Vo Database Restore lai file BAK
+Buoc 2. Copy thu muc IconJava bo ngoai DeskTop
+Buoc 3: Mo Project Add JAR o thu muc DRIVER vo thu muc.
+Buoc 4: Sua lai Connect DB
+Buoc 5: Clean project, chay from DangNhap.Java (Ctrl+F6)
