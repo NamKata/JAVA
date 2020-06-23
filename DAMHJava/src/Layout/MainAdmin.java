@@ -189,11 +189,21 @@ public class MainAdmin extends javax.swing.JFrame {
         ItemThongTin.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F1, java.awt.event.InputEvent.CTRL_MASK));
         ItemThongTin.setIcon(new javax.swing.ImageIcon("C:\\Users\\Tnam1\\OneDrive\\Desktop\\IconJava\\icons8_user_folder_32px.png")); // NOI18N
         ItemThongTin.setText("Thông Tin");
+        ItemThongTin.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ItemThongTinActionPerformed(evt);
+            }
+        });
         JMTaiKhoan.add(ItemThongTin);
 
         ItemMK.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F2, java.awt.event.InputEvent.CTRL_MASK));
         ItemMK.setIcon(new javax.swing.ImageIcon("C:\\Users\\Tnam1\\OneDrive\\Desktop\\IconJava\\icons8_password_32px.png")); // NOI18N
         ItemMK.setText("Đổi Mật Khẩu");
+        ItemMK.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ItemMKActionPerformed(evt);
+            }
+        });
         JMTaiKhoan.add(ItemMK);
 
         ItemDangXuat.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F3, java.awt.event.InputEvent.CTRL_MASK));
@@ -420,6 +430,20 @@ public class MainAdmin extends javax.swing.JFrame {
         jTContent.removeAll();
         jTContent.add("Lớp giảng dạy", frm);
     }//GEN-LAST:event_jMLopgiangdayMouseClicked
+
+    private void ItemThongTinActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ItemThongTinActionPerformed
+        // TODO add your handling code here:
+        frmQuanlyThongtincanhan frm= new frmQuanlyThongtincanhan();
+        jTContent.removeAll();
+        jTContent.add("Thông Tin Cá Nhân", frm);
+    }//GEN-LAST:event_ItemThongTinActionPerformed
+
+    private void ItemMKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ItemMKActionPerformed
+        // TODO add your handling code here:
+        frmQuanlydoimatkhau frm= new frmQuanlydoimatkhau();
+        jTContent.removeAll();
+        jTContent.add("Đổi mật khẩu", frm);
+    }//GEN-LAST:event_ItemMKActionPerformed
 
     /**
      * @param args the command line arguments

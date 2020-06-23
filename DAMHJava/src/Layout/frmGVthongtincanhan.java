@@ -5,6 +5,13 @@
  */
 package Layout;
 
+import DBConnect.Database;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import javax.swing.JOptionPane;
+
 /**
  *
  * @author Tnam1
@@ -14,10 +21,61 @@ public class frmGVthongtincanhan extends javax.swing.JPanel {
     /**
      * Creates new form frmThongtincanhan
      */
+    Database db;
     public frmGVthongtincanhan() {
         initComponents();
+        db =new Database();
+        NapBangTrinhDoVaoComboBox();
+        NapNhanThongCaNhan();
     }
-
+    private void NapNhanThongCaNhan()
+    {
+        try {
+            String sSQL = "SELECT * From tblNguoiDung WHERE IdNguoiDung='"+DangNhap.IdTk+"'";
+            ResultSet rs = db.TruyVan(sSQL);
+            if(rs == null) 
+            {
+                JOptionPane.showMessageDialog(this,"Không thể truy cập");
+                return;
+            }
+            while(rs.next())
+            {
+                txtHoTen.setText(rs.getString(3));
+                txtDiachi.setText(rs.getString(5));
+                txtEmail.setText(rs.getString(7));
+                txtSdt.setText(rs.getString(6));
+//                Date ngaysinh = new SimpleDateFormat("dd/MM/yyyy").parse(rs.getDate(4));
+                txtNgaySinh.setDate(rs.getDate(4));
+                int Vitri = Integer.parseInt(rs.getString(11).toString()) - 3;
+                System.out.println(""+rs.getDate(4));
+                cbTrinhDo.setSelectedIndex(Vitri);
+            }
+        } catch (SQLException ex) {
+            //Logger.getLogger(MyFrame.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(this,"Không thể truy cập");
+        }  
+    }
+     private void NapBangTrinhDoVaoComboBox()
+    {
+        try {
+            String sSQL = "SELECT TenTrinhDo FROM TrinhDo WHERE IdTrinhDo in (4,5,6) ";
+            ResultSet rs = db.TruyVan(sSQL);
+            if(rs == null) 
+            {
+                 JOptionPane.showMessageDialog(this,"Không thể truy cập");
+                return;
+            }
+            cbTrinhDo.addItem("Chọn trình độ bằng cấp:");
+            while(rs.next())
+            {
+                cbTrinhDo.addItem(rs.getString(1));
+            }
+        } catch (SQLException ex) {
+            //Logger.getLogger(MyFrame.class.getName()).log(Level.SEVERE, null, ex);
+             JOptionPane.showMessageDialog(this,"Không thể truy cập");
+        }
+        
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -41,8 +99,10 @@ public class frmGVthongtincanhan extends javax.swing.JPanel {
         jScrollPane1 = new javax.swing.JScrollPane();
         txtDiachi = new javax.swing.JTextArea();
         txtNgaySinh = new com.toedter.calendar.JDateChooser();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
+        btnCapnhapthongtin = new javax.swing.JButton();
+        btndoimatkhau = new javax.swing.JButton();
+        jLabel7 = new javax.swing.JLabel();
+        cbTrinhDo = new javax.swing.JComboBox<>();
 
         setMinimumSize(new java.awt.Dimension(1055, 578));
         setPreferredSize(new java.awt.Dimension(1055, 578));
@@ -94,9 +154,17 @@ public class frmGVthongtincanhan extends javax.swing.JPanel {
         txtDiachi.setRows(5);
         jScrollPane1.setViewportView(txtDiachi);
 
-        jButton1.setText("Cập nhập thông tin");
+        btnCapnhapthongtin.setText("Cập nhập thông tin");
+        btnCapnhapthongtin.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCapnhapthongtinActionPerformed(evt);
+            }
+        });
 
-        jButton2.setText("Đổi mật khẩu");
+        btndoimatkhau.setText("Đổi mật khẩu");
+
+        jLabel7.setFont(new java.awt.Font("Tahoma", 3, 13)); // NOI18N
+        jLabel7.setText("Trình Độ");
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -124,16 +192,19 @@ public class frmGVthongtincanhan extends javax.swing.JPanel {
                             .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(jPanel2Layout.createSequentialGroup()
                                 .addGap(5, 5, 5)
-                                .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(jLabel7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(jLabel5, javax.swing.GroupLayout.DEFAULT_SIZE, 88, Short.MAX_VALUE))))
                         .addGap(18, 18, 18)
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(txtSdt)
-                            .addComponent(txtEmail, javax.swing.GroupLayout.DEFAULT_SIZE, 352, Short.MAX_VALUE)))
+                            .addComponent(txtEmail, javax.swing.GroupLayout.DEFAULT_SIZE, 352, Short.MAX_VALUE)
+                            .addComponent(cbTrinhDo, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGap(284, 284, 284)
-                        .addComponent(jButton1)
+                        .addComponent(btnCapnhapthongtin)
                         .addGap(130, 130, 130)
-                        .addComponent(jButton2)))
+                        .addComponent(btndoimatkhau)))
                 .addContainerGap(90, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
@@ -154,27 +225,61 @@ public class frmGVthongtincanhan extends javax.swing.JPanel {
                 .addGap(37, 37, 37)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel6)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel7)
+                        .addComponent(cbTrinhDo, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(67, 67, 67)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton1)
-                    .addComponent(jButton2))
-                .addContainerGap(154, Short.MAX_VALUE))
+                    .addComponent(btnCapnhapthongtin, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btndoimatkhau, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(135, Short.MAX_VALUE))
         );
 
         add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 44, 1055, 530));
     }// </editor-fold>//GEN-END:initComponents
 
+    private void btnCapnhapthongtinActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCapnhapthongtinActionPerformed
+        // TODO add your handling code here:
+        String Hoten = txtHoTen.getText().toString();
+        String DiaChi = txtDiachi.getText().toString();
+        String Email = txtEmail.getText().toString();
+        String Sdt = txtSdt.getText().toString();
+        Date ngaysinh = txtNgaySinh.getDate();
+        String pattern = "MM/dd/yyyy"; //01/24/1980
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
+        String date = simpleDateFormat.format(ngaysinh);
+        if(cbTrinhDo.getSelectedIndex() == 0)
+        {
+            JOptionPane.showMessageDialog(this,"Vui lòng chọn trình độ!");
+        }
+        else
+        {
+            int TrinhDo = cbTrinhDo.getSelectedIndex()+3;
+            String sSQl= "UPDATE tblNguoiDung SET HoTen = N'"+Hoten+"', NgaySinh='"+date+"', DiaChi=N'"+DiaChi+"', Sdt='"+Sdt+"' , Email='"+Email+"', IdTrinhDo='"+TrinhDo+"' WHERE IdNguoiDung = '"+DangNhap.IdTk+"'";
+            int i = db.ThemXoaSua(sSQl);
+            if(i>0){
+                JOptionPane.showMessageDialog(this,"Bạn đã cập nhập thông tin thành công!");
+            }
+            else{
+                JOptionPane.showMessageDialog(this,"Bạn đã cập nhập thông tin Thất bại ~_~");
+            }
+        }
+        
+    }//GEN-LAST:event_btnCapnhapthongtinActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
+    private javax.swing.JButton btnCapnhapthongtin;
+    private javax.swing.JButton btndoimatkhau;
+    private javax.swing.JComboBox<String> cbTrinhDo;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;

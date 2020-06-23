@@ -5,6 +5,13 @@
  */
 package Layout;
 
+import DBConnect.Database;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import javax.swing.JOptionPane;
+
 /**
  *
  * @author Tnam1
@@ -14,10 +21,35 @@ public class frmQuanlyThongtincanhan extends javax.swing.JPanel {
     /**
      * Creates new form frmThongtincanhan
      */
+    Database db;
     public frmQuanlyThongtincanhan() {
         initComponents();
+        db =new Database();
+        NapNhanThongCaNhan();
     }
-
+     private void NapNhanThongCaNhan()
+    {
+        try {
+            String sSQL = "SELECT * From tblNguoiDung WHERE IdNguoiDung='"+DangNhap.IdTk+"'";
+            ResultSet rs = db.TruyVan(sSQL);
+            if(rs == null) 
+            {
+                JOptionPane.showMessageDialog(this,"Không thể truy cập");
+                return;
+            }
+            while(rs.next())
+            {
+                txtHoTen.setText(rs.getString(3));
+                txtDiachi.setText(rs.getString(5));
+                txtEmail.setText(rs.getString(7));
+                txtSdt.setText(rs.getString(6));
+                txtNgaySinh.setDate(rs.getDate(4));
+            }
+        } catch (SQLException ex) {
+            //Logger.getLogger(MyFrame.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(this,"Không thể truy cập");
+        }  
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -41,8 +73,8 @@ public class frmQuanlyThongtincanhan extends javax.swing.JPanel {
         jScrollPane1 = new javax.swing.JScrollPane();
         txtDiachi = new javax.swing.JTextArea();
         txtNgaySinh = new com.toedter.calendar.JDateChooser();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
+        btnCapNhap = new javax.swing.JButton();
+        btnDoimatkhau = new javax.swing.JButton();
 
         setMinimumSize(new java.awt.Dimension(1055, 578));
         setPreferredSize(new java.awt.Dimension(1055, 578));
@@ -94,9 +126,14 @@ public class frmQuanlyThongtincanhan extends javax.swing.JPanel {
         txtDiachi.setRows(5);
         jScrollPane1.setViewportView(txtDiachi);
 
-        jButton1.setText("Cập nhập thông tin");
+        btnCapNhap.setText("Cập nhập thông tin");
+        btnCapNhap.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCapNhapActionPerformed(evt);
+            }
+        });
 
-        jButton2.setText("Đổi mật khẩu");
+        btnDoimatkhau.setText("Đổi mật khẩu");
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -130,10 +167,10 @@ public class frmQuanlyThongtincanhan extends javax.swing.JPanel {
                             .addComponent(txtSdt)
                             .addComponent(txtEmail, javax.swing.GroupLayout.DEFAULT_SIZE, 352, Short.MAX_VALUE)))
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGap(284, 284, 284)
-                        .addComponent(jButton1)
-                        .addGap(130, 130, 130)
-                        .addComponent(jButton2)))
+                        .addGap(308, 308, 308)
+                        .addComponent(btnCapNhap)
+                        .addGap(139, 139, 139)
+                        .addComponent(btnDoimatkhau, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(90, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
@@ -157,18 +194,38 @@ public class frmQuanlyThongtincanhan extends javax.swing.JPanel {
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(67, 67, 67)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton1)
-                    .addComponent(jButton2))
-                .addContainerGap(154, Short.MAX_VALUE))
+                    .addComponent(btnCapNhap, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnDoimatkhau, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(138, Short.MAX_VALUE))
         );
 
         add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 44, 1055, 530));
     }// </editor-fold>//GEN-END:initComponents
 
+    private void btnCapNhapActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCapNhapActionPerformed
+        // TODO add your handling code here:
+        String Hoten = txtHoTen.getText().toString();
+        String DiaChi = txtDiachi.getText().toString();
+        String Email = txtEmail.getText().toString();
+        String Sdt = txtSdt.getText().toString();
+        Date ngaysinh = txtNgaySinh.getDate();
+        String pattern = "MM/dd/yyyy"; //01/24/1980
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
+        String date = simpleDateFormat.format(ngaysinh);
+        String sSQl= "UPDATE tblNguoiDung SET HoTen = N'"+Hoten+"', NgaySinh='"+date+"', DiaChi=N'"+DiaChi+"', Sdt='"+Sdt+"' , Email='"+Email+"' WHERE IdNguoiDung = '"+DangNhap.IdTk+"'";
+        int i = db.ThemXoaSua(sSQl);
+        if(i>0){
+            JOptionPane.showMessageDialog(this,"Bạn đã cập nhập thông tin thành công!");
+        }
+        else{
+            JOptionPane.showMessageDialog(this,"Bạn đã cập nhập thông tin Thất bại ~_~");
+        } 
+    }//GEN-LAST:event_btnCapNhapActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
+    private javax.swing.JButton btnCapNhap;
+    private javax.swing.JButton btnDoimatkhau;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;

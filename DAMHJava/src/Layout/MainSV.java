@@ -112,6 +112,9 @@ public class MainSV extends javax.swing.JFrame {
 
         getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, -1));
 
+        jTContent.setMinimumSize(new java.awt.Dimension(1055, 578));
+        jTContent.setPreferredSize(new java.awt.Dimension(1055, 578));
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(

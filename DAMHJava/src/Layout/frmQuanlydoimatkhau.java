@@ -5,6 +5,11 @@
  */
 package Layout;
 
+import DBConnect.Database;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import javax.swing.JOptionPane;
+
 /**
  *
  * @author Tnam1
@@ -14,8 +19,31 @@ public class frmQuanlydoimatkhau extends javax.swing.JPanel {
     /**
      * Creates new form frmQuanlydoimatkhau
      */
+    Database db;
+    public static String matkhaucu ="";
     public frmQuanlydoimatkhau() {
         initComponents();
+        db =new Database();
+        NapMatKhau();
+    }
+     private void NapMatKhau()
+    {
+        try {
+            String sSQL = "SELECT * From tblNguoiDung WHERE IdNguoiDung='"+DangNhap.IdTk+"'";
+            ResultSet rs = db.TruyVan(sSQL);
+            if(rs == null) 
+            {
+                JOptionPane.showMessageDialog(this,"Không thể truy cập");
+                return;
+            }
+            while(rs.next())
+            {
+                matkhaucu = rs.getString(12);
+            }
+        } catch (SQLException ex) {
+            //Logger.getLogger(MyFrame.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(this,"Không thể truy cập");
+        }  
     }
 
     /**
@@ -30,9 +58,9 @@ public class frmQuanlydoimatkhau extends javax.swing.JPanel {
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
-        jPasswordField1 = new javax.swing.JPasswordField();
-        jPasswordField2 = new javax.swing.JPasswordField();
-        jPasswordField3 = new javax.swing.JPasswordField();
+        txtmatkhauhientai = new javax.swing.JPasswordField();
+        txtmatkhaumoi = new javax.swing.JPasswordField();
+        txtnhaplai = new javax.swing.JPasswordField();
         btnthaydoi = new javax.swing.JButton();
         btnback = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
@@ -71,6 +99,11 @@ public class frmQuanlydoimatkhau extends javax.swing.JPanel {
 
         btnthaydoi.setFont(new java.awt.Font("Tahoma", 3, 12)); // NOI18N
         btnthaydoi.setText("Thay đổi mật khẩu");
+        btnthaydoi.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnthaydoiActionPerformed(evt);
+            }
+        });
 
         btnback.setFont(new java.awt.Font("Tahoma", 3, 12)); // NOI18N
         btnback.setText("Trờ về trang chủ");
@@ -100,9 +133,9 @@ public class frmQuanlydoimatkhau extends javax.swing.JPanel {
                         .addComponent(btnthaydoi)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(btnback))
-                    .addComponent(jPasswordField1, javax.swing.GroupLayout.PREFERRED_SIZE, 284, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jPasswordField2, javax.swing.GroupLayout.PREFERRED_SIZE, 284, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jPasswordField3, javax.swing.GroupLayout.PREFERRED_SIZE, 284, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtmatkhauhientai, javax.swing.GroupLayout.PREFERRED_SIZE, 284, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtmatkhaumoi, javax.swing.GroupLayout.PREFERRED_SIZE, 284, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtnhaplai, javax.swing.GroupLayout.PREFERRED_SIZE, 284, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(384, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
@@ -110,15 +143,15 @@ public class frmQuanlydoimatkhau extends javax.swing.JPanel {
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addGap(67, 67, 67)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPasswordField1, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtmatkhauhientai, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel2))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPasswordField2, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtmatkhaumoi, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel3))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPasswordField3, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtnhaplai, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel4))
                 .addGap(42, 42, 42)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -130,6 +163,57 @@ public class frmQuanlydoimatkhau extends javax.swing.JPanel {
         add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 40, 1120, 540));
     }// </editor-fold>//GEN-END:initComponents
 
+    private void btnthaydoiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnthaydoiActionPerformed
+        // TODO add your handling code here:
+        String matkhauhientai = txtmatkhauhientai.getText().toString();
+        String matkhaumoi = txtmatkhaumoi.getText().toString();
+        String nhaplai = txtnhaplai.getText().toString();
+        if(matkhauhientai.equals("") && matkhaumoi.equals("") && nhaplai.equals(""))
+        {
+            JOptionPane.showMessageDialog(this,"Yêu cầu nhập liệu ^_^");
+            txtmatkhauhientai.setText("");
+            txtmatkhaumoi.setText("");
+             txtnhaplai.setText("");
+        }
+        else
+        {
+            if(matkhauhientai.equals(matkhaucu) == true)
+            {
+                if(nhaplai.equals(matkhaumoi) == true)
+                {
+                    String sSQl ="UPDATE tblNguoiDung SET MatKhau ='"+matkhaumoi+"' WHERE IdNguoiDung='"+DangNhap.IdTk+"'";
+                    int i = db.ThemXoaSua(sSQl);
+                    if(i>0){
+                        JOptionPane.showMessageDialog(this,"Bạn đã cập nhập thông tin thành công!");
+                        txtmatkhauhientai.setText("");
+                        txtmatkhaumoi.setText("");
+                        txtnhaplai.setText("");
+                    }
+                    else{
+                        JOptionPane.showMessageDialog(this,"Bạn đã cập nhập thông tin Thất bại ~_~");
+                        txtmatkhauhientai.setText("");
+                        txtmatkhaumoi.setText("");
+                        txtnhaplai.setText("");
+                    } 
+                }
+                else
+                {
+                    JOptionPane.showMessageDialog(this,"Mật khẩu mới không đồng nhất sai T_T");
+                    txtmatkhaumoi.setText("");
+                    txtnhaplai.setText("");
+                }
+            }
+            else 
+            {
+                JOptionPane.showMessageDialog(this,"Mật khẩu hiện tại sai T_T");
+                txtmatkhauhientai.setText("");
+                txtmatkhaumoi.setText("");
+                txtnhaplai.setText("");
+            }
+        }
+       
+    }//GEN-LAST:event_btnthaydoiActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnback;
@@ -140,8 +224,8 @@ public class frmQuanlydoimatkhau extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel4;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
-    private javax.swing.JPasswordField jPasswordField1;
-    private javax.swing.JPasswordField jPasswordField2;
-    private javax.swing.JPasswordField jPasswordField3;
+    private javax.swing.JPasswordField txtmatkhauhientai;
+    private javax.swing.JPasswordField txtmatkhaumoi;
+    private javax.swing.JPasswordField txtnhaplai;
     // End of variables declaration//GEN-END:variables
 }

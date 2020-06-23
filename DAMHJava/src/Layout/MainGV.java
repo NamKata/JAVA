@@ -112,6 +112,9 @@ public class MainGV extends javax.swing.JFrame {
 
         getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, -1));
 
+        jTContent.setMinimumSize(new java.awt.Dimension(1055, 578));
+        jTContent.setPreferredSize(new java.awt.Dimension(1055, 578));
+
         javax.swing.GroupLayout jPContainerLayout = new javax.swing.GroupLayout(jPContainer);
         jPContainer.setLayout(jPContainerLayout);
         jPContainerLayout.setHorizontalGroup(
@@ -120,12 +123,12 @@ public class MainGV extends javax.swing.JFrame {
         );
         jPContainerLayout.setVerticalGroup(
             jPContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 533, Short.MAX_VALUE)
+            .addGap(0, 573, Short.MAX_VALUE)
         );
 
         jTContent.addTab("Giao diện", jPContainer);
 
-        getContentPane().add(jTContent, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 40, 1080, 560));
+        getContentPane().add(jTContent, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 40, 1080, 600));
 
         jMTaiKhoanGV.setIcon(new javax.swing.ImageIcon("C:\\Users\\Tnam1\\OneDrive\\Desktop\\IconJava\\GV\\icons8_user_account_32px_1.png")); // NOI18N
         jMTaiKhoanGV.setText("Tài Khoản");
@@ -189,7 +192,7 @@ public class MainGV extends javax.swing.JFrame {
 
     private void jMDoiMatKhauActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMDoiMatKhauActionPerformed
         // TODO add your handling code here:
-        frmGVthaydoimatkhau frm = new frmGVthaydoimatkhau();
+        frmGVdoimatkhau frm = new frmGVdoimatkhau();
         jTContent.removeAll();
         jTContent.add("Thay đổi mật khẩu", frm);
     }//GEN-LAST:event_jMDoiMatKhauActionPerformed
