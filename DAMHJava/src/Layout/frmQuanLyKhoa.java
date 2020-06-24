@@ -5,6 +5,14 @@
  */
 package Layout;
 
+import DBConnect.Database;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
+import java.sql.SQLException;
+import java.util.Date;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+
 /**
  *
  * @author Tnam1
@@ -14,10 +22,83 @@ public class frmQuanLyKhoa extends javax.swing.JPanel {
     /**
      * Creates new form frmKhoa
      */
+    Database db;
     public frmQuanLyKhoa() {
         initComponents();
+        db = new Database();
+        NapBangKhoaVaoTable();
+        SetButtonDefault();
     }
-
+     private void NapBangKhoaVaoTable()
+    {
+        try {
+            DefaultTableModel modelTable = new DefaultTableModel();
+            String sSelect = "SELECT IdKhoa as N'Mã Khoa',TenKhoa as N'Tên Khoa' FROM Khoa ";
+            ResultSet rs = db.TruyVan(sSelect);
+            if(rs == null)
+            {
+                JOptionPane.showMessageDialog(this,"Không thể truy vấn SQL");
+                return;
+            }
+            ResultSetMetaData md = rs.getMetaData();
+            int numCols = md.getColumnCount();
+            Object []arr = new Object[numCols];
+            for(int i=0;i<numCols;i++)
+                arr[i]=md.getColumnName(i+1);
+            modelTable.setColumnIdentifiers(arr);
+            
+            while(rs.next())
+            {
+                for(int i=0;i<numCols;i++)
+                    arr[i]=rs.getObject(i+1);
+                modelTable.addRow(arr);
+            }
+            tblKhoa.setModel(modelTable);
+        } catch (SQLException ex) {
+            //Logger.getLogger(MyFrame.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(this,"Không thể truy vấn SQL");
+        }
+    }
+    private void SetButtonDefault()
+    {
+        btnThem.setEnabled(true);
+        btnReset.setEnabled(true);
+        btnXoa.setEnabled(false);
+        btnLuu.setEnabled(false);
+        btnSua.setEnabled(false);
+    }
+    private void SetButtonThucThiSuaXoa()
+    {
+        btnThem.setEnabled(false);
+        btnReset.setEnabled(true);
+        btnXoa.setEnabled(true);
+        btnLuu.setEnabled(false);
+        btnSua.setEnabled(true);
+    }
+    private void SetButtonThem()
+    {
+        btnThem.setEnabled(false);
+        btnReset.setEnabled(true);
+        btnXoa.setEnabled(false);
+        btnLuu.setEnabled(true);
+        btnSua.setEnabled(false);
+    }
+    private void SetCleanInput()
+    {
+        txtTenKhoa.setText("");
+        txtMaKhoa.setText("");
+        txtTimkiem.setText("");
+        txtMaKhoa.setEditable(true);
+    }
+     private void NapItemDuocChon()
+    { 
+        if (tblKhoa.getSelectedRow() < 0) {            
+            return;
+        }
+        int row = tblKhoa.getSelectedRow();
+        txtMaKhoa.setText(tblKhoa.getValueAt(row, 0).toString());
+        txtTenKhoa.setText((String)tblKhoa.getValueAt(row, 1));
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -120,18 +201,43 @@ public class frmQuanLyKhoa extends javax.swing.JPanel {
 
         btnSua.setFont(new java.awt.Font("Arial", 3, 13)); // NOI18N
         btnSua.setText("Sửa");
+        btnSua.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSuaActionPerformed(evt);
+            }
+        });
 
         btnXoa.setFont(new java.awt.Font("Arial", 3, 13)); // NOI18N
         btnXoa.setText("Xóa");
+        btnXoa.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnXoaActionPerformed(evt);
+            }
+        });
 
         btnLuu.setFont(new java.awt.Font("Arial", 3, 13)); // NOI18N
         btnLuu.setText("Lưu");
+        btnLuu.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnLuuActionPerformed(evt);
+            }
+        });
 
         btnThem.setFont(new java.awt.Font("Arial", 3, 13)); // NOI18N
         btnThem.setText("Thêm");
+        btnThem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnThemActionPerformed(evt);
+            }
+        });
 
         btnReset.setFont(new java.awt.Font("Arial", 3, 13)); // NOI18N
         btnReset.setText("Reset");
+        btnReset.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnResetActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -182,6 +288,11 @@ public class frmQuanLyKhoa extends javax.swing.JPanel {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
+        tblKhoa.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tblKhoaMouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(tblKhoa);
 
         jLabel4.setFont(new java.awt.Font("Tahoma", 3, 12)); // NOI18N
@@ -189,6 +300,11 @@ public class frmQuanLyKhoa extends javax.swing.JPanel {
 
         btnTimkiem.setFont(new java.awt.Font("Tahoma", 2, 12)); // NOI18N
         btnTimkiem.setText("Tìm kiếm");
+        btnTimkiem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnTimkiemActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
@@ -221,6 +337,134 @@ public class frmQuanLyKhoa extends javax.swing.JPanel {
 
         add(jPanel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 190, 1050, 310));
     }// </editor-fold>//GEN-END:initComponents
+
+    private void tblKhoaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblKhoaMouseClicked
+        // TODO add your handling code here:
+        NapItemDuocChon();
+        SetButtonThucThiSuaXoa();
+    }//GEN-LAST:event_tblKhoaMouseClicked
+
+    private void btnTimkiemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTimkiemActionPerformed
+        // TODO add your handling code here:
+        String timkiem = txtTimkiem.getText().toString();
+        if(timkiem.equals(""))
+        {
+            JOptionPane.showMessageDialog(this,"Vùi lòng nhập tên khoa cần tìm T_T");
+        }
+        else
+        {
+             try {
+                DefaultTableModel modelTable = new DefaultTableModel();
+                String sSelect = "SELECT IdKhoa as N'Mã Khoa',TenKhoa as N'Tên Khoa' FROM Khoa  WHERE TenKhoa like N'%"+timkiem+"%'";
+                ResultSet rs = db.TruyVan(sSelect);
+                if(rs == null)
+                {
+                    JOptionPane.showMessageDialog(this,"Không thể truy vấn SQL");
+                    return;
+                }
+                ResultSetMetaData md = rs.getMetaData();
+                int numCols = md.getColumnCount();
+                Object []arr = new Object[numCols];
+                for(int i=0;i<numCols;i++)
+                    arr[i]=md.getColumnName(i+1);
+                modelTable.setColumnIdentifiers(arr);
+
+                while(rs.next())
+                {
+                    for(int i=0;i<numCols;i++)
+                        arr[i]=rs.getObject(i+1);
+                    modelTable.addRow(arr);
+                }
+                if(modelTable.getRowCount() > 0)
+                {
+                    tblKhoa.setModel(modelTable);
+                }
+                else
+                {
+                    JOptionPane.showMessageDialog(this,"Không tìm thấy dữ liệu tìm kiếm trong cơ sở dữ liệu!");
+                    txtTimkiem.setText("");
+                    NapBangKhoaVaoTable();
+                }
+            } catch (SQLException ex) {
+                //Logger.getLogger(MyFrame.class.getName()).log(Level.SEVERE, null, ex);
+                JOptionPane.showMessageDialog(this,"Không thể truy vấn SQL");
+            }
+        }
+    }//GEN-LAST:event_btnTimkiemActionPerformed
+
+    private void btnThemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnThemActionPerformed
+        // TODO add your handling code here:
+        SetCleanInput();
+        SetButtonThem();
+    }//GEN-LAST:event_btnThemActionPerformed
+
+    private void btnLuuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLuuActionPerformed
+        // TODO add your handling code here:
+        String tenkhoa = txtTenKhoa.getText().toString();
+        if(tenkhoa.equals(""))
+        {
+             JOptionPane.showMessageDialog(this,"Vùi lòng điền tên khoa mới");
+        }
+        else
+        {
+            String sSQL ="INSERT INTO Khoa(TenKhoa) VALUES(N'"+tenkhoa+"')";
+            int i = db.ThemXoaSua(sSQL);
+            if(i>0)
+            {
+                JOptionPane.showMessageDialog(this,"Bạn đã tạo mới thành công khoa "+tenkhoa);
+                NapBangKhoaVaoTable();
+            }
+            else
+            {
+                JOptionPane.showMessageDialog(this,"Bạn đã tạo mới thất bại khoa "+tenkhoa);
+            }
+        }
+    }//GEN-LAST:event_btnLuuActionPerformed
+
+    private void btnSuaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSuaActionPerformed
+        // TODO add your handling code here:
+        String tenkhoa = txtTenKhoa.getText().toString();
+         if (tblKhoa.getSelectedRow() < 0) { 
+            JOptionPane.showMessageDialog(this,"Phải chọn một dòng để xóa!");
+            return;
+        }
+        int row = tblKhoa.getSelectedRow();
+        int maNV_to_del = (int)tblKhoa.getValueAt(row, 0);
+        String s = "UPDATE Khoa SET TenKhoa = N'"+tenkhoa+"' WHERE IdKhoa = "+maNV_to_del+"";
+        int i = db.ThemXoaSua(s);
+        if (i>0)
+        {
+            JOptionPane.showMessageDialog(this,"Bạn đã cập nhập thành công ");
+            NapBangKhoaVaoTable();
+        }
+        else
+        {
+           JOptionPane.showMessageDialog(this,"Bạn đã cập nhập thất bại");
+        }
+    }//GEN-LAST:event_btnSuaActionPerformed
+
+    private void btnXoaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnXoaActionPerformed
+        // TODO add your handling code here:
+        int row = tblKhoa.getSelectedRow();
+        int maNV_to_del = (int)tblKhoa.getValueAt(row, 0);
+        String s = "DELETE FROM Khoa WHERE IdKhoa = "+maNV_to_del+"";
+        int i = db.ThemXoaSua(s);
+        if (i>0)
+        {
+            JOptionPane.showMessageDialog(this,"Bạn đã cập nhập thành công ");
+            NapBangKhoaVaoTable();
+        }
+        else
+        {
+           JOptionPane.showMessageDialog(this,"Bạn đã cập nhập thất bại");
+        }
+    }//GEN-LAST:event_btnXoaActionPerformed
+
+    private void btnResetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnResetActionPerformed
+        // TODO add your handling code here:
+        SetCleanInput();
+        SetButtonDefault();
+    }//GEN-LAST:event_btnResetActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
