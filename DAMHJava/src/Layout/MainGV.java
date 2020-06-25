@@ -130,11 +130,11 @@ public class MainGV extends javax.swing.JFrame {
 
         getContentPane().add(jTContent, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 40, 1080, 600));
 
-        jMTaiKhoanGV.setIcon(new javax.swing.ImageIcon("C:\\Users\\Tnam1\\OneDrive\\Desktop\\IconJava\\GV\\icons8_user_account_32px_1.png")); // NOI18N
+        jMTaiKhoanGV.setIcon(new javax.swing.ImageIcon("C:\\Users\\Tnam1\\OneDrive\\Desktop\\JAVA\\DAMHJava\\src\\Image\\GV\\icons8_user_account_32px_1.png")); // NOI18N
         jMTaiKhoanGV.setText("Tài Khoản");
 
         jMThongTinTK.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_1, java.awt.event.InputEvent.SHIFT_MASK));
-        jMThongTinTK.setIcon(new javax.swing.ImageIcon("C:\\Users\\Tnam1\\OneDrive\\Desktop\\IconJava\\GV\\icons8_settings_32px.png")); // NOI18N
+        jMThongTinTK.setIcon(new javax.swing.ImageIcon("C:\\Users\\Tnam1\\OneDrive\\Desktop\\JAVA\\DAMHJava\\src\\Image\\GV\\icons8_settings_32px.png")); // NOI18N
         jMThongTinTK.setText("Thông Tin Cá Nhân");
         jMThongTinTK.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -144,7 +144,7 @@ public class MainGV extends javax.swing.JFrame {
         jMTaiKhoanGV.add(jMThongTinTK);
 
         jMDoiMatKhau.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_2, java.awt.event.InputEvent.SHIFT_MASK));
-        jMDoiMatKhau.setIcon(new javax.swing.ImageIcon("C:\\Users\\Tnam1\\OneDrive\\Desktop\\IconJava\\GV\\icons8_edit_32px_2.png")); // NOI18N
+        jMDoiMatKhau.setIcon(new javax.swing.ImageIcon("C:\\Users\\Tnam1\\OneDrive\\Desktop\\JAVA\\DAMHJava\\src\\Image\\GV\\icons8_edit_32px_2.png")); // NOI18N
         jMDoiMatKhau.setText("Đổi Mật Khẩu");
         jMDoiMatKhau.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -154,7 +154,7 @@ public class MainGV extends javax.swing.JFrame {
         jMTaiKhoanGV.add(jMDoiMatKhau);
 
         jMDangXuat.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_3, java.awt.event.InputEvent.SHIFT_MASK));
-        jMDangXuat.setIcon(new javax.swing.ImageIcon("C:\\Users\\Tnam1\\OneDrive\\Desktop\\IconJava\\GV\\icons8_shutdown_32px_2.png")); // NOI18N
+        jMDangXuat.setIcon(new javax.swing.ImageIcon("C:\\Users\\Tnam1\\OneDrive\\Desktop\\JAVA\\DAMHJava\\src\\Image\\GV\\icons8_shutdown_32px_2.png")); // NOI18N
         jMDangXuat.setText("Đăng Xuất");
         jMDangXuat.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {

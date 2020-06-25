@@ -7,7 +7,7 @@
         <Menu class="javax.swing.JMenu" name="jMTaiKhoanGV">
           <Properties>
             <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-              <Image iconType="2" name="C:\Users\Tnam1\OneDrive\Desktop\IconJava\GV\icons8_user_account_32px_1.png"/>
+              <Image iconType="2" name="C:\Users\Tnam1\OneDrive\Desktop\JAVA\DAMHJava\src\Image\GV\icons8_user_account_32px_1.png"/>
             </Property>
             <Property name="text" type="java.lang.String" value="T&#xe0;i Kho&#x1ea3;n"/>
           </Properties>
@@ -18,7 +18,7 @@
                   <KeyStroke key="Shift+1"/>
                 </Property>
                 <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                  <Image iconType="2" name="C:\Users\Tnam1\OneDrive\Desktop\IconJava\GV\icons8_settings_32px.png"/>
+                  <Image iconType="2" name="C:\Users\Tnam1\OneDrive\Desktop\JAVA\DAMHJava\src\Image\GV\icons8_settings_32px.png"/>
                 </Property>
                 <Property name="text" type="java.lang.String" value="Th&#xf4;ng Tin C&#xe1; Nh&#xe2;n"/>
               </Properties>
@@ -32,7 +32,7 @@
                   <KeyStroke key="Shift+2"/>
                 </Property>
                 <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                  <Image iconType="2" name="C:\Users\Tnam1\OneDrive\Desktop\IconJava\GV\icons8_edit_32px_2.png"/>
+                  <Image iconType="2" name="C:\Users\Tnam1\OneDrive\Desktop\JAVA\DAMHJava\src\Image\GV\icons8_edit_32px_2.png"/>
                 </Property>
                 <Property name="text" type="java.lang.String" value="&#x110;&#x1ed5;i M&#x1ead;t Kh&#x1ea9;u"/>
               </Properties>
@@ -46,7 +46,7 @@
                   <KeyStroke key="Shift+3"/>
                 </Property>
                 <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                  <Image iconType="2" name="C:\Users\Tnam1\OneDrive\Desktop\IconJava\GV\icons8_shutdown_32px_2.png"/>
+                  <Image iconType="2" name="C:\Users\Tnam1\OneDrive\Desktop\JAVA\DAMHJava\src\Image\GV\icons8_shutdown_32px_2.png"/>
                 </Property>
                 <Property name="text" type="java.lang.String" value="&#x110;&#x103;ng Xu&#x1ea5;t"/>
               </Properties>

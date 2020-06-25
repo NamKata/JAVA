@@ -6,6 +6,7 @@
 package Layout;
 
 import DBConnect.Database;
+import java.awt.event.KeyAdapter;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
@@ -24,33 +25,64 @@ public class frmQuanLyMonHoc extends javax.swing.JPanel {
      * Creates new form frmQuanLyMonHoc
      */
     Database db;
-    private String sLoiNapDuLieu = "Lỗi nạp dữ liệu.";
-    private String sLuuThanhCong = "Lưu dữ liệu thành công.";
-    private String sLuuKhongThanhCong = "Lưu dữ liệu không thành công.";
     public frmQuanLyMonHoc() {
         initComponents();
         db =new Database();
         NapDuLieuKhoaVaoCbKhoa();
         NapDuLieutblMonHocVaoTable();
-        btnSua.setEnabled(false);
+        SetButtonDefault();
+        SetCleanInput();
+        SetEditInput();
+    }
+    private void SetButtonDefault()
+    {
+        btnThem.setEnabled(true);
+        btnReset.setEnabled(true);
         btnXoa.setEnabled(false);
         btnLuu.setEnabled(false);
+        btnSua.setEnabled(false);
     }
-    private void Reset()
+    private void SetButtonThucThiSuaXoa()
+    {
+        btnThem.setEnabled(false);
+        btnReset.setEnabled(true);
+        btnXoa.setEnabled(true);
+        btnLuu.setEnabled(false);
+        btnSua.setEnabled(true);
+    }
+    private void SetButtonThem()
+    {
+        btnThem.setEnabled(false);
+        btnReset.setEnabled(true);
+        btnXoa.setEnabled(false);
+        btnLuu.setEnabled(true);
+        btnSua.setEnabled(false);
+    }
+    private void SetCleanInput()
     {
         txtMa.setText("");
-        txtTien.setText("");
         txtMon.setText("");
-        txtTinChi.setText("");
+        txtTien.setText("");
         txtTiet.setText("");
+        txtTinChi.setText("");
         txtTim.setText("");
-        txtMa.setEditable(true);
-        btnThem.setEnabled(true);
-        btnLuu.setEnabled(false);
-        btnSua.setEnabled(false);
-        btnXoa.setEnabled(false);
-        btnReset.setEnabled(true);
-        
+        cbKhoa.setSelectedIndex(0);
+    }
+    private  void SetEditInput()
+    {
+        txtMa.setEditable(false);
+        txtMon.setEditable(false);
+        txtTien.setEditable(false);
+        txtTiet.setEditable(false);
+        txtTinChi.setEditable(false);
+    }
+    private  void SetEditInputThucThi()
+     {
+        txtMa.setEditable(false);
+        txtMon.setEditable(true);
+        txtTien.setEditable(true);
+        txtTiet.setEditable(true);
+        txtTinChi.setEditable(true);
     }
     private void NapDuLieuKhoaVaoCbKhoa()
     {
@@ -59,16 +91,17 @@ public class frmQuanLyMonHoc extends javax.swing.JPanel {
             ResultSet rs = db.TruyVan(sSQL);
             if(rs == null) 
             {
-                JOptionPane.showMessageDialog(this,sLoiNapDuLieu);
+                JOptionPane.showMessageDialog(this,"Không thể truy cập CSDL");
                 return;
             }
+            cbKhoa.addItem("Chọn khoa:");
             while(rs.next())
             {
                 cbKhoa.addItem(rs.getString(1));
             }
         } catch (SQLException ex) {
             //Logger.getLogger(MyFrame.class.getName()).log(Level.SEVERE, null, ex);
-            JOptionPane.showMessageDialog(this,sLoiNapDuLieu);
+            JOptionPane.showMessageDialog(this,"Truy DBConect Thất bại");
         }
     }
      private void NapDuLieutblMonHocVaoTable()
@@ -79,7 +112,7 @@ public class frmQuanLyMonHoc extends javax.swing.JPanel {
             ResultSet rs = db.TruyVan(sSelect);
             if(rs == null)
             {
-                JOptionPane.showMessageDialog(this,sLoiNapDuLieu);
+                JOptionPane.showMessageDialog(this,"Không thể truy cập CSDL");
                 return;
             }
             ResultSetMetaData md = rs.getMetaData();
@@ -100,7 +133,7 @@ public class frmQuanLyMonHoc extends javax.swing.JPanel {
             jTMonHoc.setModel(modelTable);
         } catch (SQLException ex) {
             //Logger.getLogger(MyFrame.class.getName()).log(Level.SEVERE, null, ex);
-            JOptionPane.showMessageDialog(this,sLoiNapDuLieu);
+            JOptionPane.showMessageDialog(this,"Truy cập DBConnect Thất bại");
         }
     }
      private void NapItemDuocChon()
@@ -153,6 +186,7 @@ public class frmQuanLyMonHoc extends javax.swing.JPanel {
         jTMonHoc = new javax.swing.JTable();
         txtTim = new javax.swing.JTextField();
         btnTim = new javax.swing.JButton();
+        jLabel8 = new javax.swing.JLabel();
 
         jPanel1.setBackground(new java.awt.Color(0, 0, 255));
 
@@ -185,6 +219,18 @@ public class frmQuanLyMonHoc extends javax.swing.JPanel {
         jLabel3.setFont(new java.awt.Font("Tahoma", 3, 13)); // NOI18N
         jLabel3.setText("Mã Môn Học");
 
+        txtTinChi.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtTinChiKeyTyped(evt);
+            }
+        });
+
+        txtTien.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtTienKeyTyped(evt);
+            }
+        });
+
         jLabel4.setFont(new java.awt.Font("Tahoma", 3, 13)); // NOI18N
         jLabel4.setText("Tên Môn Học");
 
@@ -193,6 +239,12 @@ public class frmQuanLyMonHoc extends javax.swing.JPanel {
 
         jLabel6.setFont(new java.awt.Font("Tahoma", 3, 13)); // NOI18N
         jLabel6.setText("Tiền/Tín Chỉ");
+
+        txtTiet.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtTietKeyTyped(evt);
+            }
+        });
 
         jLabel7.setFont(new java.awt.Font("Tahoma", 3, 13)); // NOI18N
         jLabel7.setText("Số Tiết");
@@ -265,14 +317,29 @@ public class frmQuanLyMonHoc extends javax.swing.JPanel {
 
         btnSua.setFont(new java.awt.Font("Tahoma", 3, 14)); // NOI18N
         btnSua.setText("Sửa");
+        btnSua.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSuaActionPerformed(evt);
+            }
+        });
 
         btnXoa.setFont(new java.awt.Font("Tahoma", 3, 14)); // NOI18N
         btnXoa.setForeground(new java.awt.Color(255, 0, 0));
         btnXoa.setText("Xóa");
+        btnXoa.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnXoaActionPerformed(evt);
+            }
+        });
 
         btnLuu.setFont(new java.awt.Font("Tahoma", 3, 14)); // NOI18N
         btnLuu.setForeground(new java.awt.Color(255, 153, 153));
         btnLuu.setText("Lưu");
+        btnLuu.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnLuuActionPerformed(evt);
+            }
+        });
 
         btnReset.setFont(new java.awt.Font("Tahoma", 3, 14)); // NOI18N
         btnReset.setForeground(new java.awt.Color(0, 204, 204));
@@ -341,10 +408,17 @@ public class frmQuanLyMonHoc extends javax.swing.JPanel {
         });
         jScrollPane1.setViewportView(jTMonHoc);
 
-        btnTim.setBackground(null);
         btnTim.setForeground(new java.awt.Color(255, 51, 51));
         btnTim.setText("Tìm");
         btnTim.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        btnTim.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnTimActionPerformed(evt);
+            }
+        });
+
+        jLabel8.setFont(new java.awt.Font("Tahoma", 3, 12)); // NOI18N
+        jLabel8.setText("Tên Môn Học");
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
@@ -352,6 +426,8 @@ public class frmQuanLyMonHoc extends javax.swing.JPanel {
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel4Layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jLabel8)
+                .addGap(50, 50, 50)
                 .addComponent(txtTim, javax.swing.GroupLayout.PREFERRED_SIZE, 318, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(btnTim, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -363,7 +439,8 @@ public class frmQuanLyMonHoc extends javax.swing.JPanel {
             .addGroup(jPanel4Layout.createSequentialGroup()
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnTim, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txtTim, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtTim, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel8))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 251, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
@@ -399,25 +476,342 @@ public class frmQuanLyMonHoc extends javax.swing.JPanel {
 
     private void btnThemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnThemActionPerformed
         // TODO add your handling code here:
-        btnLuu.setEnabled(true);
-        btnThem.setEnabled(false);
+        SetCleanInput();
+        SetEditInputThucThi();
+        SetButtonThem();
     }//GEN-LAST:event_btnThemActionPerformed
 
     private void jTMonHocMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTMonHocMouseClicked
         // TODO add your handling code here:
         NapItemDuocChon();
-        txtMa.setEditable(false);
-        btnThem.setEnabled(false);
-        btnLuu.setEnabled(false);
-        btnSua.setEnabled(true);
-        btnXoa.setEnabled(true);
-        btnReset.setEnabled(true);
+        SetEditInputThucThi();
+        SetButtonThucThiSuaXoa();
     }//GEN-LAST:event_jTMonHocMouseClicked
 
     private void btnResetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnResetActionPerformed
         // TODO add your handling code here:
-        Reset();
+        SetButtonDefault();
+        SetCleanInput();
+        SetEditInput();
     }//GEN-LAST:event_btnResetActionPerformed
+
+    private void btnTimActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTimActionPerformed
+        // TODO add your handling code here:
+        String timkiem = txtTim.getText().toString();
+        if(timkiem.equals(""))
+        {
+             JOptionPane.showMessageDialog(this,"Vùi lòng nhập thông tin môn học cần tìm");
+               NapDuLieutblMonHocVaoTable();
+                    SetEditInput();
+                    SetCleanInput();
+                    SetButtonDefault();
+        }
+        else
+        {
+            try {
+            DefaultTableModel modelTable = new DefaultTableModel();
+            String sSelect = "	SELECT IdMonHoc as N'Mã Môn',TenMonHoc as N'Tên Môn Học', SoTinChi as N'Số Tín Chỉ', SoTiet as N'Số Tiết', SoTien as N'Tiền/Tín Chỉ', TenKhoa FROM MonHoc, Khoa  WHERE MonHoc.IdKhoa=Khoa.IdKhoa and TenMonHoc like N'%"+timkiem+"%'";
+            ResultSet rs = db.TruyVan(sSelect);
+            if(rs == null)
+            {
+                JOptionPane.showMessageDialog(this,"Không thể truy cập CSDL");
+                return;
+            }
+            ResultSetMetaData md = rs.getMetaData();
+            int numCols = md.getColumnCount();
+            Object []arr = new Object[numCols];
+            for(int i=0;i<numCols;i++)
+            {
+                arr[i]=md.getColumnName(i+1);  
+            }
+            modelTable.setColumnIdentifiers(arr);
+            
+            while(rs.next())
+            {
+                for(int i=0;i<numCols;i++)
+                    arr[i]=rs.getObject(i+1);
+                modelTable.addRow(arr);
+            }
+            if(modelTable.getRowCount() > 0)
+            {
+                jTMonHoc.setModel(modelTable);
+            }
+            else
+            {
+                JOptionPane.showMessageDialog(this,"Không tìm thấy");
+                NapDuLieutblMonHocVaoTable();
+                SetButtonDefault();
+                SetCleanInput();
+                SetEditInput();
+                txtTim.setText("");
+            }
+            } catch (SQLException ex) {
+                //Logger.getLogger(MyFrame.class.getName()).log(Level.SEVERE, null, ex);
+                JOptionPane.showMessageDialog(this,"Truy cập DBConnect Thất bại");
+            }
+        }
+          
+    }//GEN-LAST:event_btnTimActionPerformed
+
+    private void txtTinChiKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtTinChiKeyTyped
+        // TODO add your handling code here:
+        txtTinChi.addKeyListener(new KeyAdapter() {});
+        char char_input = evt.getKeyChar();
+        if (((char_input < '0') || (char_input > '9')) && (char_input != '\b'))
+        {
+            JOptionPane.showMessageDialog(this, "Nhập Số !","Lỗi",JOptionPane.ERROR_MESSAGE);
+            txtTinChi.setText("");
+        }
+    }//GEN-LAST:event_txtTinChiKeyTyped
+
+    private void txtTienKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtTienKeyTyped
+        // TODO add your handling code here:
+         txtTien.addKeyListener(new KeyAdapter() {});
+        char char_input = evt.getKeyChar();
+        if (((char_input < '0') || (char_input > '9')) && (char_input != '\b'))
+        {
+            JOptionPane.showMessageDialog(this, "Nhập Số !","Lỗi",JOptionPane.ERROR_MESSAGE);
+            txtTien.setText("");
+        }
+    }//GEN-LAST:event_txtTienKeyTyped
+
+    private void txtTietKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtTietKeyTyped
+        // TODO add your handling code here:
+        txtTiet.addKeyListener(new KeyAdapter() {});
+        char char_input = evt.getKeyChar();
+        if (((char_input < '0') || (char_input > '9')) && (char_input != '\b'))
+        {
+            JOptionPane.showMessageDialog(this, "Nhập Số !","Lỗi",JOptionPane.ERROR_MESSAGE);
+            txtTiet.setText("");
+        }
+    }//GEN-LAST:event_txtTietKeyTyped
+
+    private void btnLuuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLuuActionPerformed
+        // TODO add your handling code here:
+        String tenmon = txtMon.getText().toString();
+        String tinchimon = txtTinChi.getText().toString();
+        String tietmon = txtTiet.getText().toString();
+        String tien =txtTien.getText().toString();
+        if(tenmon.equals("") && tinchimon.equals("") && tietmon.equals("") && tien.equals(""))
+        {
+            JOptionPane.showMessageDialog(this,"Vùi lòng nhập dữ liệu $_$");
+        }
+        else
+        {
+            int Tinchi = Integer.parseInt(tinchimon);
+//            System.out.println(""+Tinchi);
+            int Tiet  = Integer.parseInt(tietmon);
+//            System.out.println(""+Tiet);
+            float Tien = Float.parseFloat(tien);
+//            System.out.println(""+Tien);
+            int Check =0;
+            int khoa=0;
+            try {
+                String sSQL = "SELECT IdKhoa FROM Khoa WHERE TenKhoa = N'"+cbKhoa.getSelectedItem().toString()+"'";
+                ResultSet rs = db.TruyVan(sSQL);
+                if(rs == null) 
+                {
+                    JOptionPane.showMessageDialog(this,"Không truy vấn được trong CSDL");
+                    return;
+                }
+                 while(rs.next())
+                {
+                    khoa = rs.getInt(1);
+                }
+
+            } catch (SQLException ex) {
+                //Logger.getLogger(MyFrame.class.getName()).log(Level.SEVERE, null, ex);
+                JOptionPane.showMessageDialog(this,"Lỗi truy vấn");
+            }
+            if(Tinchi <= Check && Tinchi > 5)
+            {
+                JOptionPane.showMessageDialog(this,"Tín chỉ không được  <=0 và > 5");
+                txtTinChi.setText("");
+            }
+            else if(Tiet <= Check && Tiet > 50)
+            {
+                JOptionPane.showMessageDialog(this,"Tiết không được  <=0 và > 50");
+                txtTiet.setText("");
+            }
+            else if(khoa == 0)
+            {
+                  JOptionPane.showMessageDialog(this,"Vùi lòng chọn khoa");
+            }
+            else if(Tien < 0)
+            {
+                JOptionPane.showMessageDialog(this,"Tiền không được  <0 ");
+                txtTien.setText("");
+            }
+            else
+            {
+                String Sql = "INSERT INTO MonHoc(TenMonHoc,SoTinChi, SoTiet,SoTien,IdKhoa) VALUES(N'"+tenmon+"',"+Tinchi+" ,"+Tiet+","+Tien+","+khoa+")";
+                int i = db.ThemXoaSua(Sql);
+                 if(i > 0)
+                    {
+                        JOptionPane.showMessageDialog(this,"Thêm mới thành công");
+                        NapDuLieutblMonHocVaoTable();
+                        SetEditInput();
+                        SetCleanInput();
+                        SetButtonDefault();
+                    }
+                    else
+                    {
+                        JOptionPane.showMessageDialog(this,"Thêm mới thất bại");
+                        NapDuLieutblMonHocVaoTable();
+                        SetEditInput();
+                        SetCleanInput();
+                        SetButtonDefault();
+                    }
+            }
+        }
+       
+    }//GEN-LAST:event_btnLuuActionPerformed
+
+    private void btnSuaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSuaActionPerformed
+        // TODO add your handling code here:
+         if (jTMonHoc.getSelectedRow() < 0) { 
+            JOptionPane.showMessageDialog(this,"Phải chọn một dòng để sửa hoặc xóa!");
+            return;
+        }
+        int row = jTMonHoc.getSelectedRow();
+        int maMon = (int)jTMonHoc.getValueAt(row, 0);
+        String tenmon = txtMon.getText().toString();
+        int Tinchi = Integer.parseInt(txtTinChi.getText().toString());
+        int Tiet  = Integer.parseInt(txtTiet.getText().toString());
+        float Tien = Float.parseFloat(txtTien.getText().toString());
+        int khoa=0;
+        try {
+            String sSQL = "SELECT IdKhoa FROM Khoa WHERE TenKhoa = N'"+cbKhoa.getSelectedItem().toString()+"'";
+            ResultSet rs = db.TruyVan(sSQL);
+            if(rs == null) 
+            {
+                JOptionPane.showMessageDialog(this,"Không truy vấn được trong CSDL");
+                return;
+            }
+             while(rs.next())
+            {
+                khoa = rs.getInt(1);
+            }
+            
+        } catch (SQLException ex) {
+            //Logger.getLogger(MyFrame.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(this,"Lỗi truy vấn");
+        }
+        if(Tinchi < 0 && Tinchi > 5)
+        {
+            JOptionPane.showMessageDialog(this,"Tín chỉ không được  <0 và > 5");
+            txtTinChi.setText("");
+        }
+        else if(Tiet < 0 && Tiet > 50)
+        {
+            JOptionPane.showMessageDialog(this,"Tiết không được  <0 và > 50");
+            txtTiet.setText("");
+        }
+        else if(khoa == 0)
+        {
+              JOptionPane.showMessageDialog(this,"Vùi lòng chọn khoa");
+        }
+        else if(Tien < 0)
+        {
+            JOptionPane.showMessageDialog(this,"Tiền không được  <0 ");
+            txtTien.setText("");
+        }
+        else if(tenmon.equals(""))
+        {
+            JOptionPane.showMessageDialog(this,"Vui lòng nhập môn");
+        }
+        else
+        {
+            String Sql = "UPDATE MonHoc SET TenMonHoc = N'"+tenmon+"', SoTinChi='"+Tinchi+"', SoTien='"+Tien+"', SoTiet= '"+Tiet+"', IdKhoa='"+khoa+"' WHERE IdMonHoc = "+maMon+"";
+            int i = db.ThemXoaSua(Sql);
+             if(i > 0)
+                {
+                    JOptionPane.showMessageDialog(this,"Cập nhập thành công");
+                    NapDuLieutblMonHocVaoTable();
+                    SetEditInput();
+                    SetCleanInput();
+                    SetButtonDefault();
+                }
+                else
+                {
+                    JOptionPane.showMessageDialog(this,"Cập nhập thất bại");
+                    NapDuLieutblMonHocVaoTable();
+                    SetEditInput();
+                    SetCleanInput();
+                    SetButtonDefault();
+                }
+        }
+    }//GEN-LAST:event_btnSuaActionPerformed
+
+    private void btnXoaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnXoaActionPerformed
+        // TODO add your handling code here:
+         if (jTMonHoc.getSelectedRow() < 0) { 
+            JOptionPane.showMessageDialog(this,"Phải chọn một dòng để  sửa hoặc xóa!");
+            return;
+        }
+        String dem = "";
+        int row = jTMonHoc.getSelectedRow();
+        int maMon = (int)jTMonHoc.getValueAt(row, 0);
+        int dialogButton = JOptionPane.YES_NO_OPTION;
+        int dialogResult = JOptionPane.showConfirmDialog (null, "Bạn muốn xóa  này thật chứ!","Warning",dialogButton);
+        if(dialogResult == JOptionPane.YES_OPTION){
+          // Saving code here
+            try {
+            String checkXoa = "	SELECT COUNT(*) as N'Đếm' FROM MonHoc, DangKy where MonHoc.IdKhoa = DangKy.IdMonHoc and DangKy.Status in (1,2,3) and MonHoc.IdKhoa="+maMon+"";
+            ResultSet rs = db.TruyVan(checkXoa);
+            if(rs == null) 
+            {
+                JOptionPane.showMessageDialog(this,"Không truy vấn được trong CSDL");
+                return;
+            }
+             while(rs.next())
+            {
+                dem = rs.getString(1);
+            }
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(this,"Không truy vấn được trong CSDL");
+            }
+            System.err.println(""+dem);
+            if(!dem.equals("0"))
+            {
+                JOptionPane.showMessageDialog(this,"Không được phép XÓA");
+                NapDuLieutblMonHocVaoTable();
+                    SetEditInput();
+                    SetCleanInput();
+                    SetButtonDefault();
+            }
+            else
+            {
+//                JOptionPane.showMessageDialog(this," được phép XÓA");
+                String Xoa = "DELETE FROM MonHoc WHERE IdMonHoc = "+maMon+"";
+                int i = db.ThemXoaSua(Xoa);
+                if(i > 0)
+                {
+                    JOptionPane.showMessageDialog(this,"Xóa thành công");
+                    NapDuLieutblMonHocVaoTable();
+                    SetEditInput();
+                    SetCleanInput();
+                    SetButtonDefault();
+                }
+                else
+                {
+                    JOptionPane.showMessageDialog(this,"Xóa thất bại");
+                    NapDuLieutblMonHocVaoTable();
+                    SetEditInput();
+                    SetCleanInput();
+                    SetButtonDefault();
+                }
+               
+            }
+        }
+        else
+        {
+            NapDuLieutblMonHocVaoTable();
+                    SetEditInput();
+                    SetCleanInput();
+                    SetButtonDefault();
+        }
+    }//GEN-LAST:event_btnXoaActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -435,6 +829,7 @@ public class frmQuanLyMonHoc extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;

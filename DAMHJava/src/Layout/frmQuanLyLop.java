@@ -5,6 +5,14 @@
  */
 package Layout;
 
+import DBConnect.Database;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
+import java.sql.SQLException;
+import java.util.Date;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+
 /**
  *
  * @author Tnam1
@@ -14,10 +22,114 @@ public class frmQuanLyLop extends javax.swing.JPanel {
     /**
      * Creates new form frmKhoa
      */
+    Database db;
     public frmQuanLyLop() {
         initComponents();
+        db =new Database();
+        NapBangKhoaVaoComboBox();
+        NapBangLopVaoTable();
+        SetButtonDefault();
+        SetEnableEdit();
+        SetCleanInput();
     }
-
+    private void NapBangLopVaoTable()
+    {
+        try {
+            DefaultTableModel modelTable = new DefaultTableModel();
+            String sSelect = "	SELECT  IdLop as N'Mã Lớp', TenLop as N'Tên Lớp', TenKhoa as N'Khoa' FROM Lop, Khoa WHERE Lop.IdKhoa=Khoa.IdKhoa";
+            ResultSet rs = db.TruyVan(sSelect);
+            if(rs == null)
+            {
+                JOptionPane.showMessageDialog(this,"Không thể truy vấn trong CSDL");
+                return;
+            }
+            ResultSetMetaData md = rs.getMetaData();
+            int numCols = md.getColumnCount();
+            Object []arr = new Object[numCols];
+            for(int i=0;i<numCols;i++)
+                arr[i]=md.getColumnName(i+1);
+            modelTable.setColumnIdentifiers(arr);
+            
+            while(rs.next())
+            {
+                for(int i=0;i<numCols;i++)
+                    arr[i]=rs.getObject(i+1);
+                modelTable.addRow(arr);
+            }
+            if(modelTable.getRowCount()>0)
+            {
+                 tblLop.setModel(modelTable);
+            }
+            else
+            {
+                JOptionPane.showMessageDialog(this,"Truy vấn CSDL không tìm thấy dữ liệu này");
+            }
+        } catch (SQLException ex) {
+            //Logger.getLogger(MyFrame.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(this,"Lỗi truy vấn");
+        }
+    }
+    private void NapBangKhoaVaoComboBox()
+    {
+        try {
+            String sSQL = "SELECT TenKhoa FROM Khoa";
+            ResultSet rs = db.TruyVan(sSQL);
+            if(rs == null) 
+            {
+                JOptionPane.showMessageDialog(this,"Không truy vấn được trong CSDL");
+                return;
+            }
+            cbKhoa.addItem("Chọn khoa:");
+            while(rs.next())
+            {
+                cbKhoa.addItem(rs.getString(1));
+            }
+        } catch (SQLException ex) {
+            //Logger.getLogger(MyFrame.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(this,"Lỗi truy vấn");
+        }
+        
+    }
+    private  void SetButtonDefault()
+    {
+        btnThem.setEnabled(true);
+        btnReset.setEnabled(true);
+        btnLuu.setEnabled(false);
+        btnXoa.setEnabled(false);
+        btnSua.setEnabled(false);
+    }
+    private void SetButtonSuaXoa()
+    {
+        btnThem.setEnabled(false);
+        btnReset.setEnabled(true);
+        btnLuu.setEnabled(false);
+        btnXoa.setEnabled(true);
+        btnSua.setEnabled(true);
+    }
+    private void SetButtonThem()
+    {
+        btnThem.setEnabled(false);
+        btnReset.setEnabled(true);
+        btnLuu.setEnabled(true);
+        btnXoa.setEnabled(false);
+        btnSua.setEnabled(false);
+    }
+    private void SetCleanInput()
+    {
+        txtMaLop.setText("");
+        txtLop.setText("");
+        txtTimKiem.setText("");
+        cbKhoa.setSelectedIndex(0);
+    }
+    private void SetEnableEdit()
+    {
+        txtMaLop.setEditable(false);
+        txtLop.setEditable(false);
+    }
+    private void SetEnableEditInputThucThi()
+    {
+        txtLop.setEditable(true);
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -115,11 +227,12 @@ public class frmQuanLyLop extends javax.swing.JPanel {
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel2)
-                    .addComponent(txtMaLop, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel4)
-                    .addComponent(cbKhoa, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel2)
+                        .addComponent(txtMaLop, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(cbKhoa, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel3)
@@ -133,18 +246,43 @@ public class frmQuanLyLop extends javax.swing.JPanel {
 
         btnSua.setFont(new java.awt.Font("Arial", 3, 13)); // NOI18N
         btnSua.setText("Sửa");
+        btnSua.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSuaActionPerformed(evt);
+            }
+        });
 
         btnXoa.setFont(new java.awt.Font("Arial", 3, 13)); // NOI18N
         btnXoa.setText("Xóa");
+        btnXoa.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnXoaActionPerformed(evt);
+            }
+        });
 
         btnLuu.setFont(new java.awt.Font("Arial", 3, 13)); // NOI18N
         btnLuu.setText("Lưu");
+        btnLuu.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnLuuActionPerformed(evt);
+            }
+        });
 
         btnThem.setFont(new java.awt.Font("Arial", 3, 13)); // NOI18N
         btnThem.setText("Thêm");
+        btnThem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnThemActionPerformed(evt);
+            }
+        });
 
         btnReset.setFont(new java.awt.Font("Arial", 3, 13)); // NOI18N
         btnReset.setText("Reset");
+        btnReset.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnResetActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -195,6 +333,11 @@ public class frmQuanLyLop extends javax.swing.JPanel {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
+        tblLop.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tblLopMouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(tblLop);
 
         jLabel5.setFont(new java.awt.Font("Tahoma", 3, 12)); // NOI18N
@@ -245,7 +388,260 @@ public class frmQuanLyLop extends javax.swing.JPanel {
 
     private void btnTimkiemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTimkiemActionPerformed
         // TODO add your handling code here:
+        String timkiemtenlop  = txtTimKiem.getText().toString();
+        if(timkiemtenlop.equals(""))
+        {
+            JOptionPane.showMessageDialog(this,"Vùi lòng nhập thông tin lớp cần tìm");
+            NapBangLopVaoTable();
+        }else
+        {
+            try {
+            DefaultTableModel modelTable = new DefaultTableModel();
+            String sSelect = "SELECT  IdLop as N'Mã Lớp', TenLop as N'Tên Lớp', TenKhoa as N'Khoa' FROM Lop, Khoa WHERE Lop.IdKhoa=Khoa.IdKhoa and TenLop like N'%"+timkiemtenlop+"%'";
+            ResultSet rs = db.TruyVan(sSelect);
+            if(rs == null)
+            {
+                JOptionPane.showMessageDialog(this,"Không thể truy vấn trong CSDL");
+                return;
+            }
+            ResultSetMetaData md = rs.getMetaData();
+            int numCols = md.getColumnCount();
+            Object []arr = new Object[numCols];
+            for(int i=0;i<numCols;i++)
+                arr[i]=md.getColumnName(i+1);
+            modelTable.setColumnIdentifiers(arr);
+            
+            while(rs.next())
+            {
+                for(int i=0;i<numCols;i++)
+                    arr[i]=rs.getObject(i+1);
+                modelTable.addRow(arr);
+            }
+            if(modelTable.getRowCount()>0)
+            {
+                 tblLop.setModel(modelTable);
+            }
+            else
+            {
+                JOptionPane.showMessageDialog(this,"Truy vấn CSDL không tìm thấy dữ liệu này");
+                txtTimKiem.setText("");
+                NapBangLopVaoTable();
+            }
+            } catch (SQLException ex) {
+                //Logger.getLogger(MyFrame.class.getName()).log(Level.SEVERE, null, ex);
+                JOptionPane.showMessageDialog(this,"Lỗi truy vấn");
+            }
+        }
     }//GEN-LAST:event_btnTimkiemActionPerformed
+     private void NapItemDuocChon()
+    { 
+        if (tblLop.getSelectedRow() < 0) {            
+            return;
+        }
+        int row = tblLop.getSelectedRow();
+        txtMaLop.setText(tblLop.getValueAt(row, 0).toString());
+        txtLop.setText((String)tblLop.getValueAt(row, 1));
+        for(int i=0;i<cbKhoa.getItemCount();i++)
+            if(cbKhoa.getItemAt(i).equals((String)tblLop.getValueAt(row, 2)))
+                cbKhoa.setSelectedIndex(i);
+    }
+    private void tblLopMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblLopMouseClicked
+        // TODO add your handling code here:
+        SetButtonSuaXoa();
+        NapItemDuocChon();
+        SetEnableEditInputThucThi();
+    }//GEN-LAST:event_tblLopMouseClicked
+
+    private void btnThemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnThemActionPerformed
+        // TODO add your handling code here:
+        SetCleanInput();
+        SetEnableEditInputThucThi();
+        SetButtonThem();
+    }//GEN-LAST:event_btnThemActionPerformed
+
+    private void btnResetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnResetActionPerformed
+        // TODO add your handling code here:
+        SetCleanInput();
+        SetEnableEdit();
+        SetButtonDefault();
+    }//GEN-LAST:event_btnResetActionPerformed
+
+    private void btnLuuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLuuActionPerformed
+        // TODO add your handling code here:
+        String tenLop = txtLop.getText().toString();
+        int khoa=0;
+        try {
+            String sSQL = "SELECT IdKhoa FROM Khoa WHERE TenKhoa = N'"+cbKhoa.getSelectedItem().toString()+"'";
+            ResultSet rs = db.TruyVan(sSQL);
+            if(rs == null) 
+            {
+                JOptionPane.showMessageDialog(this,"Không truy vấn được trong CSDL");
+                return;
+            }
+             while(rs.next())
+            {
+                khoa = rs.getInt(1);
+            }
+            
+        } catch (SQLException ex) {
+            //Logger.getLogger(MyFrame.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(this,"Lỗi truy vấn");
+        }
+        if(khoa == 0)
+        {
+            JOptionPane.showMessageDialog(this,"Vùi lòng chọn khoa ~~");
+        }
+        else
+        {
+            if(tenLop.equals(""))
+            {
+                 JOptionPane.showMessageDialog(this,"Vùi lòng nhập tên lớp");
+            }else
+            {
+                 String SQL= "INSERT INTO Lop(TenLop, IdKhoa) VALUES(N'"+tenLop+"',"+khoa+")";
+                int i = db.ThemXoaSua(SQL);
+                if(i > 0)
+                {
+                    JOptionPane.showMessageDialog(this,"Thêm mới thành công");
+                    NapBangLopVaoTable();
+                    SetEnableEdit();
+                    SetCleanInput();
+                    SetButtonDefault();
+                }
+                else
+                {
+                    JOptionPane.showMessageDialog(this,"Thêm mới thất bại");
+                    NapBangLopVaoTable();
+                    SetEnableEdit();
+                    SetCleanInput();
+                }
+            }
+          
+        }
+    }//GEN-LAST:event_btnLuuActionPerformed
+
+    private void btnSuaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSuaActionPerformed
+        // TODO add your handling code here:
+        if (tblLop.getSelectedRow() < 0) { 
+            JOptionPane.showMessageDialog(this,"Phải chọn một dòng để sửa hoặc xóa!");
+            return;
+        }
+        int row = tblLop.getSelectedRow();
+        int maLop = (int)tblLop.getValueAt(row, 0);
+        String tenLop = txtLop.getText().toString();
+        int khoa=0;
+        try {
+            String sSQL = "SELECT IdKhoa FROM Khoa WHERE TenKhoa = N'"+cbKhoa.getSelectedItem().toString()+"'";
+            ResultSet rs = db.TruyVan(sSQL);
+            if(rs == null) 
+            {
+                JOptionPane.showMessageDialog(this,"Không truy vấn được trong CSDL");
+                return;
+            }
+             while(rs.next())
+            {
+                khoa = rs.getInt(1);
+            }
+            
+        } catch (SQLException ex) {
+            //Logger.getLogger(MyFrame.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(this,"Lỗi truy vấn");
+        }
+        if(khoa == 0)
+        {
+            JOptionPane.showMessageDialog(this,"Vùi lòng chọn khoa ~~");
+        }
+        else
+        {
+            String SQL= "UPDATE Lop SET TenLop = N'"+tenLop+"', IdKhoa ='"+khoa+"' WHERE IdLop = "+maLop+"";
+            int i = db.ThemXoaSua(SQL);
+            if(i > 0)
+            {
+                JOptionPane.showMessageDialog(this,"Cập nhập thành công");
+                NapBangLopVaoTable();
+                SetEnableEdit();
+                SetCleanInput();
+                SetButtonDefault();
+            }
+            else
+            {
+                JOptionPane.showMessageDialog(this,"Cập nhập thất bại");
+                NapBangLopVaoTable();
+                SetEnableEdit();
+                SetCleanInput();
+            }
+        }
+    }//GEN-LAST:event_btnSuaActionPerformed
+
+    private void btnXoaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnXoaActionPerformed
+        // TODO add your handling code here:
+         if (tblLop.getSelectedRow() < 0) { 
+            JOptionPane.showMessageDialog(this,"Phải chọn một dòng để  sửa hoặc xóa!");
+            return;
+        }
+        String dem = "";
+        int row = tblLop.getSelectedRow();
+        int maLop = (int)tblLop.getValueAt(row, 0);
+        int dialogButton = JOptionPane.YES_NO_OPTION;
+        int dialogResult = JOptionPane.showConfirmDialog (null, "Bạn muốn xóa lớp này thật chứ!","Warning",dialogButton);
+        if(dialogResult == JOptionPane.YES_OPTION){
+          // Saving code here
+            try {
+            String checkXoa = "SELECT COUNT(*) as N'Số lượng' FROM tblNguoiDung, Lop where tblNguoiDung.IdLop = Lop.IdLop and Lop.IdLop = "+maLop+"";
+            ResultSet rs = db.TruyVan(checkXoa);
+            if(rs == null) 
+            {
+                JOptionPane.showMessageDialog(this,"Không truy vấn được trong CSDL");
+                return;
+            }
+             while(rs.next())
+            {
+                dem = rs.getString(1);
+            }
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(this,"Không truy vấn được trong CSDL");
+            }
+            System.err.println(""+dem);
+            if(!dem.equals("0"))
+            {
+                JOptionPane.showMessageDialog(this,"Không được phép XÓA");
+                NapBangLopVaoTable();
+                SetEnableEdit();
+                SetCleanInput();
+                SetButtonDefault();
+            }
+            else
+            {
+//                JOptionPane.showMessageDialog(this," được phép XÓA");
+                String Xoa = "DELETE FROM Lop WHERE IdLop = "+maLop+"";
+                int i = db.ThemXoaSua(Xoa);
+                if(i > 0)
+                {
+                    JOptionPane.showMessageDialog(this,"Xóa thành công");
+                    NapBangLopVaoTable();
+                    SetEnableEdit();
+                    SetCleanInput();
+                    SetButtonDefault();
+                }
+                else
+                {
+                    JOptionPane.showMessageDialog(this,"Xóa thất bại");
+                    NapBangLopVaoTable();
+                    SetEnableEdit();
+                    SetCleanInput();
+                    SetButtonDefault();
+                }
+               
+            }
+        }
+        else
+        {
+            NapBangLopVaoTable();
+            SetEnableEdit();
+            SetCleanInput();
+            SetButtonDefault();
+        }
+    }//GEN-LAST:event_btnXoaActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

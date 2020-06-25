@@ -5,6 +5,14 @@
  */
 package Layout;
 
+import DBConnect.Database;
+import java.awt.event.KeyAdapter;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
+import java.sql.SQLException;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+
 /**
  *
  * @author Tnam1
@@ -14,10 +22,93 @@ public class frmQuanLyPhongHoc extends javax.swing.JPanel {
     /**
      * Creates new form frmKhoa
      */
+    Database db;
     public frmQuanLyPhongHoc() {
         initComponents();
+        db =new Database();
+        NapBangPhongHocVaoTable();
+        SetButtonDefault();
+        SetCleanInput();
+        SetEnableEdit();
     }
-
+    private void NapBangPhongHocVaoTable()
+    {
+        try {
+            DefaultTableModel modelTable = new DefaultTableModel();
+            String sSelect = "SELECT IdPhong as N'Mã Phòng',TenPhong as N'Tên Phòng', SoLuong as N'Số lượng' FROM PhongHoc ";
+            ResultSet rs = db.TruyVan(sSelect);
+            if(rs == null)
+            {
+                JOptionPane.showMessageDialog(this,"Không thể truy vấn trong CSDL");
+                return;
+            }
+            ResultSetMetaData md = rs.getMetaData();
+            int numCols = md.getColumnCount();
+            Object []arr = new Object[numCols];
+            for(int i=0;i<numCols;i++)
+                arr[i]=md.getColumnName(i+1);
+            modelTable.setColumnIdentifiers(arr);
+            
+            while(rs.next())
+            {
+                for(int i=0;i<numCols;i++)
+                    arr[i]=rs.getObject(i+1);
+                modelTable.addRow(arr);
+            }
+            if(modelTable.getRowCount()>0)
+            {
+                 tblPhongHoc.setModel(modelTable);
+            }
+            else
+            {
+                JOptionPane.showMessageDialog(this,"Truy vấn CSDL không tìm thấy dữ liệu này");
+            }
+        } catch (SQLException ex) {
+            //Logger.getLogger(MyFrame.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(this,"Lỗi truy vấn");
+        }
+    }
+    private  void SetButtonDefault()
+    {
+        btnThem.setEnabled(true);
+        btnReset.setEnabled(true);
+        btnLuu.setEnabled(false);
+        btnXoa.setEnabled(false);
+        btnSua.setEnabled(false);
+    }
+    private void SetButtonSuaXoa()
+    {
+        btnThem.setEnabled(false);
+        btnReset.setEnabled(true);
+        btnLuu.setEnabled(false);
+        btnXoa.setEnabled(true);
+        btnSua.setEnabled(true);
+    }
+    private void SetButtonThem()
+    {
+        btnThem.setEnabled(false);
+        btnReset.setEnabled(true);
+        btnLuu.setEnabled(true);
+        btnXoa.setEnabled(false);
+        btnSua.setEnabled(false);
+    }
+    private void SetCleanInput()
+    {
+        txtMaPhong.setText("");
+        txtTenPhong.setText("");
+        txtSoluong.setText("");
+    }
+    private void SetEnableEdit()
+    {
+        txtMaPhong.setEditable(false);
+        txtTenPhong.setEditable(false);
+        txtSoluong.setEditable(false);
+    }
+    private void SetEnableEditInputThucThi()
+    {
+        txtTenPhong.setEditable(true);
+        txtSoluong.setEditable(true);
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -45,6 +136,9 @@ public class frmQuanLyPhongHoc extends javax.swing.JPanel {
         jPanel4 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         tblPhongHoc = new javax.swing.JTable();
+        jLabel5 = new javax.swing.JLabel();
+        txtTimkiem = new javax.swing.JTextField();
+        btnTimkiem = new javax.swing.JButton();
 
         setMinimumSize(new java.awt.Dimension(1055, 578));
         setPreferredSize(new java.awt.Dimension(1055, 578));
@@ -87,6 +181,12 @@ public class frmQuanLyPhongHoc extends javax.swing.JPanel {
         jLabel4.setFont(new java.awt.Font("Arial", 3, 13)); // NOI18N
         jLabel4.setText("Số Lượng");
 
+        txtSoluong.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtSoluongKeyTyped(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
@@ -116,10 +216,11 @@ public class frmQuanLyPhongHoc extends javax.swing.JPanel {
                     .addComponent(txtSoluong, javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel2)
-                            .addComponent(txtMaPhong, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel4))))
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel4, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(jLabel2)
+                                .addComponent(txtMaPhong, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)))))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel3)
@@ -133,18 +234,43 @@ public class frmQuanLyPhongHoc extends javax.swing.JPanel {
 
         btnSua.setFont(new java.awt.Font("Arial", 3, 13)); // NOI18N
         btnSua.setText("Sửa");
+        btnSua.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSuaActionPerformed(evt);
+            }
+        });
 
         btnXoa.setFont(new java.awt.Font("Arial", 3, 13)); // NOI18N
         btnXoa.setText("Xóa");
+        btnXoa.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnXoaActionPerformed(evt);
+            }
+        });
 
         btnLuu.setFont(new java.awt.Font("Arial", 3, 13)); // NOI18N
         btnLuu.setText("Lưu");
+        btnLuu.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnLuuActionPerformed(evt);
+            }
+        });
 
         btnThem.setFont(new java.awt.Font("Arial", 3, 13)); // NOI18N
         btnThem.setText("Thêm");
+        btnThem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnThemActionPerformed(evt);
+            }
+        });
 
         btnReset.setFont(new java.awt.Font("Arial", 3, 13)); // NOI18N
         btnReset.setText("Reset");
+        btnReset.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnResetActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -198,7 +324,23 @@ public class frmQuanLyPhongHoc extends javax.swing.JPanel {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
+        tblPhongHoc.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tblPhongHocMouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(tblPhongHoc);
+
+        jLabel5.setFont(new java.awt.Font("Tahoma", 3, 12)); // NOI18N
+        jLabel5.setText("Tìm kiếm phòng học");
+
+        btnTimkiem.setFont(new java.awt.Font("Tahoma", 3, 12)); // NOI18N
+        btnTimkiem.setText("Tìm kiếm");
+        btnTimkiem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnTimkiemActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
@@ -208,17 +350,261 @@ public class frmQuanLyPhongHoc extends javax.swing.JPanel {
                 .addContainerGap()
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 1042, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(16, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jLabel5)
+                .addGap(27, 27, 27)
+                .addComponent(txtTimkiem, javax.swing.GroupLayout.PREFERRED_SIZE, 227, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(29, 29, 29)
+                .addComponent(btnTimkiem)
+                .addGap(48, 48, 48))
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel4Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 274, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(21, Short.MAX_VALUE))
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txtTimkiem, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel5)
+                    .addComponent(btnTimkiem))
+                .addGap(18, 18, 18)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 238, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(16, Short.MAX_VALUE))
         );
 
         add(jPanel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 170, 1080, 330));
     }// </editor-fold>//GEN-END:initComponents
+
+    private void btnTimkiemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTimkiemActionPerformed
+        // TODO add your handling code here:
+        String timkiem =txtTimkiem.getText().toString();
+        if(timkiem.equals(""))
+        {
+            JOptionPane.showMessageDialog(this,"Yêu cầu nhập phòng học cần tìm kiếm");
+        }
+        else
+        {
+              try {
+            DefaultTableModel modelTable = new DefaultTableModel();
+            String sSelect = "SELECT IdPhong as N'Mã Phòng',TenPhong as N'Tên Phòng', SoLuong as N'Số lượng' FROM PhongHoc WHERE TenPhong like N'%"+timkiem+"%'";
+            ResultSet rs = db.TruyVan(sSelect);
+            if(rs == null)
+            {
+                JOptionPane.showMessageDialog(this,"Không thể truy vấn trong CSDL");
+                return;
+            }
+            ResultSetMetaData md = rs.getMetaData();
+            int numCols = md.getColumnCount();
+            Object []arr = new Object[numCols];
+            for(int i=0;i<numCols;i++)
+                arr[i]=md.getColumnName(i+1);
+            modelTable.setColumnIdentifiers(arr);
+            
+            while(rs.next())
+            {
+                for(int i=0;i<numCols;i++)
+                    arr[i]=rs.getObject(i+1);
+                modelTable.addRow(arr);
+            }
+            if(modelTable.getRowCount()>0)
+            {
+                 tblPhongHoc.setModel(modelTable);
+            }
+            else
+            {
+                JOptionPane.showMessageDialog(this,"Truy vấn CSDL không tìm thấy dữ liệu này");
+                NapBangPhongHocVaoTable();
+                SetButtonDefault();
+                SetCleanInput();
+                SetEnableEdit();
+                txtTimkiem.setText("");
+            }
+        } catch (SQLException ex) {
+            //Logger.getLogger(MyFrame.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(this,"Lỗi truy vấn");
+        }
+        }
+    }//GEN-LAST:event_btnTimkiemActionPerformed
+
+    private void txtSoluongKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtSoluongKeyTyped
+        // TODO add your handling code here:
+        txtSoluong.addKeyListener(new KeyAdapter() {});
+        char char_input = evt.getKeyChar();
+        if (((char_input < '0') || (char_input > '9')) && (char_input != '\b'))
+        {
+            JOptionPane.showMessageDialog(this, "Nhập Số lượng!","Lỗi",JOptionPane.ERROR_MESSAGE);
+            txtSoluong.setText("");
+        }
+    }//GEN-LAST:event_txtSoluongKeyTyped
+
+    private void btnResetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnResetActionPerformed
+        // TODO add your handling code here:
+        SetEnableEdit();
+        SetCleanInput();
+        SetButtonDefault();
+    }//GEN-LAST:event_btnResetActionPerformed
+
+    private void btnThemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnThemActionPerformed
+        // TODO add your handling code here:
+        SetButtonThem();
+        SetEnableEditInputThucThi();
+        SetCleanInput();
+    }//GEN-LAST:event_btnThemActionPerformed
+    private void NapItemDuocChon()
+    { 
+        if (tblPhongHoc.getSelectedRow() < 0) {            
+            return;
+        }
+        int row = tblPhongHoc.getSelectedRow();
+        txtMaPhong.setText(tblPhongHoc.getValueAt(row, 0).toString());
+        txtTenPhong.setText((String)tblPhongHoc.getValueAt(row, 1));
+        txtSoluong.setText(tblPhongHoc.getValueAt(row, 2).toString());
+    }
+    private void tblPhongHocMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblPhongHocMouseClicked
+        // TODO add your handling code here:
+        NapItemDuocChon();
+        SetButtonSuaXoa();
+        SetEnableEditInputThucThi();
+    }//GEN-LAST:event_tblPhongHocMouseClicked
+
+    private void btnLuuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLuuActionPerformed
+        // TODO add your handling code here:
+        String phong  = txtTenPhong.getText().toString();
+        int soluong = Integer.parseInt(txtSoluong.getText().toString());
+        if(soluong > 0 && soluong < 150)
+        {
+            String them = "INSERT INTO PhongHoc(TenPhong,SoLuong) VALUES(N'"+phong+"', "+soluong+")";
+             int i = db.ThemXoaSua(them);
+              if(i > 0)
+                {
+                    JOptionPane.showMessageDialog(this,"Thêm mới thành công");
+                    NapBangPhongHocVaoTable();
+                    SetEnableEdit();
+                    SetCleanInput();
+                    SetButtonDefault();
+                }
+                else
+                {
+                    JOptionPane.showMessageDialog(this,"Thêm mới thất bại");
+                    NapBangPhongHocVaoTable();
+                    SetEnableEdit();
+                    SetCleanInput();
+                }
+        }
+        else
+        {
+            JOptionPane.showMessageDialog(this, "Yêu cầu nhập số lương > 0 và < 150","Lỗi",JOptionPane.ERROR_MESSAGE);
+            txtSoluong.setText("");
+        }
+       
+    }//GEN-LAST:event_btnLuuActionPerformed
+
+    private void btnSuaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSuaActionPerformed
+        // TODO add your handling code here:
+         if (tblPhongHoc.getSelectedRow() < 0) { 
+            JOptionPane.showMessageDialog(this,"Phải chọn một dòng để sửa hoặc xóa!");
+            return;
+        }
+        int row = tblPhongHoc.getSelectedRow();
+        int maPhong = (int)tblPhongHoc.getValueAt(row, 0);
+        String phong  = txtTenPhong.getText().toString();
+        int soluong = Integer.parseInt(txtSoluong.getText().toString());
+        if(soluong > 0 && soluong < 150)
+        {
+            String sua = "UPDATE PhongHoc SET TenPhong = N'"+phong+"', SoLuong='"+soluong+"' WHERE IdPhong = "+maPhong;
+             int i = db.ThemXoaSua(sua);
+              if(i > 0)
+                {
+                    JOptionPane.showMessageDialog(this,"Cập nhập thành công");
+                    NapBangPhongHocVaoTable();
+                    SetEnableEdit();
+                    SetCleanInput();
+                    SetButtonDefault();
+                }
+                else
+                {
+                    JOptionPane.showMessageDialog(this,"Cập nhập thất bại");
+                    NapBangPhongHocVaoTable();
+                    SetEnableEdit();
+                    SetCleanInput();
+                    SetButtonDefault();
+                }
+        }
+        else
+        {
+            	
+            JOptionPane.showMessageDialog(this, "Yêu cầu nhập số lương > 0 và < 150","Lỗi",JOptionPane.ERROR_MESSAGE);
+            txtSoluong.setText("");
+        }
+    }//GEN-LAST:event_btnSuaActionPerformed
+
+    private void btnXoaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnXoaActionPerformed
+        // TODO add your handling code here:
+         if (tblPhongHoc.getSelectedRow() < 0) { 
+            JOptionPane.showMessageDialog(this,"Phải chọn một dòng để  sửa hoặc xóa!");
+            return;
+        }
+        String dem = "";
+        int row = tblPhongHoc.getSelectedRow();
+        int maPhong = (int)tblPhongHoc.getValueAt(row, 0);
+        int dialogButton = JOptionPane.YES_NO_OPTION;
+        int dialogResult = JOptionPane.showConfirmDialog (null, "Bạn muốn xóa lớp này thật chứ!","Warning",dialogButton);
+        if(dialogResult == JOptionPane.YES_OPTION){
+          // Saving code here
+            try {
+            String checkXoa = "SELECT COUNT(*) as N'Đếm' FROM PhongHoc, DangKy where PhongHoc.IdPhong = DangKy.IdPhong and DangKy.Status in (1,2,3) and PhongHoc.IdPhong="+maPhong+"";
+            ResultSet rs = db.TruyVan(checkXoa);
+            if(rs == null) 
+            {
+                JOptionPane.showMessageDialog(this,"Không truy vấn được trong CSDL");
+                return;
+            }
+             while(rs.next())
+            {
+                dem = rs.getString(1);
+            }
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(this,"Không truy vấn được trong CSDL");
+            }
+            if(!dem.equals("0"))
+            {
+                JOptionPane.showMessageDialog(this,"Không được phép XÓA");
+                NapBangPhongHocVaoTable();
+                SetEnableEdit();
+                SetCleanInput();
+                SetButtonDefault();
+            }
+            else
+            {
+//                JOptionPane.showMessageDialog(this," được phép XÓA");
+                String Xoa = "DELETE FROM PhongHoc WHERE IdPhong = "+maPhong+"";
+                int i = db.ThemXoaSua(Xoa);
+                if(i > 0)
+                {
+                    JOptionPane.showMessageDialog(this,"Xóa thành công");
+                    NapBangPhongHocVaoTable();
+                    SetEnableEdit();
+                    SetCleanInput();
+                    SetButtonDefault();
+                }
+                else
+                {
+                    JOptionPane.showMessageDialog(this,"Xóa thất bại");
+                    NapBangPhongHocVaoTable();
+                    SetEnableEdit();
+                    SetCleanInput();
+                    SetButtonDefault();
+                }
+               
+            }
+        }
+        else
+        {
+            NapBangPhongHocVaoTable();
+            SetEnableEdit();
+            SetCleanInput();
+            SetButtonDefault();
+        }
+    }//GEN-LAST:event_btnXoaActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -226,11 +612,13 @@ public class frmQuanLyPhongHoc extends javax.swing.JPanel {
     private javax.swing.JButton btnReset;
     private javax.swing.JButton btnSua;
     private javax.swing.JButton btnThem;
+    private javax.swing.JButton btnTimkiem;
     private javax.swing.JButton btnXoa;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
@@ -240,5 +628,6 @@ public class frmQuanLyPhongHoc extends javax.swing.JPanel {
     private javax.swing.JTextField txtMaPhong;
     private javax.swing.JTextField txtSoluong;
     private javax.swing.JTextField txtTenPhong;
+    private javax.swing.JTextField txtTimkiem;
     // End of variables declaration//GEN-END:variables
 }

@@ -173,7 +173,7 @@ public class DangNhap extends javax.swing.JFrame {
 
         getContentPane().add(jPLogin, new org.netbeans.lib.awtextra.AbsoluteConstraints(330, 280, 150, 40));
 
-        jLabel2.setIcon(new javax.swing.ImageIcon("C:\\Users\\Tnam1\\Downloads\\BGr.jpg")); // NOI18N
+        jLabel2.setIcon(new javax.swing.ImageIcon("C:\\Users\\Tnam1\\OneDrive\\Desktop\\JAVA\\DAMHJava\\src\\Image\\BGr.jpg")); // NOI18N
         jLabel2.setVerticalAlignment(javax.swing.SwingConstants.BOTTOM);
         jLabel2.setAutoscrolls(true);
         jLabel2.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));

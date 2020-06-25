@@ -23,7 +23,10 @@
 	-- Tìm kiếm bằng Khoa
 	SELECT  IdLop as N'Mã Lớp', TenLop as N'Tên Lớp', TenKhoa as N'Khoa' FROM Lop, Khoa WHERE Lop.IdKhoa=Khoa.IdKhoa and Lop.IdKhoa =3
 	SELECT  IdLop as N'Mã Lớp', TenLop as N'Tên Lớp', TenKhoa as N'Khoa' FROM Lop, Khoa WHERE Lop.IdKhoa=Khoa.IdKhoa and Khoa.TenKhoa like N'%Công Nghệ Ô Tô%'
-
+	-- Tìm mã khoa qua tên khoa--
+	SELECT IdKhoa FROM Khoa WHERE TenKhoa = N'Công Nghệ Ô Tô'
+	-- kiểm tra có học sinh trong lớp học đó ko
+	SELECT COUNT(*) FROM tblNguoiDung, Lop where tblNguoiDung.IdLop = Lop.IdLop and Lop.IdLop = 1
 
 ----------------------------------------------
 -- Quản lý Khoa
@@ -53,8 +56,12 @@
 	SELECT IdPhong as N'Mã Phòng',TenPhong as N'Tên Phòng', SoLuong as N'Số lượng' FROM PhongHoc WHERE IdPhong=7
 	-- Tìm kiếm bằng tên phòng
 	SELECT IdPhong as N'Mã Phòng',TenPhong as N'Tên Phòng', SoLuong as N'Số lượng' FROM PhongHoc WHERE TenPhong like N'%E1%'
+	-- Kiểm ra xem phòng học có lớp dạy chưa --
+	SELECT COUNT(*) as N'Đếm' FROM PhongHoc, DangKy where PhongHoc.IdPhong = DangKy.IdPhong and DangKy.Status in (1,2,3) and PhongHoc.IdPhong=3
 -------------------------
 -- Quản lý Môn học
+	-- kiểm tra môn này đã giảng chưa ?--
+	SELECT COUNT(*) as N'Đếm' FROM MonHoc, DangKy where MonHoc.IdKhoa = DangKy.IdMonHoc and DangKy.Status in (1,2,3) and MonHoc.IdKhoa=1
 	-- Lấy thông tin Khoa vào combobox
 	SELECT TenKhoa FROM Khoa 
 	-- Danh sách Vô Table
