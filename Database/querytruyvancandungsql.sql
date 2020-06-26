@@ -80,6 +80,7 @@
 	SELECT IdMonHoc as N'Mã Môn',TenMonHoc as N'Tên Môn Học', SoTinChi as N'Số Tín Chỉ', SoTiet as N'Số Tiết', SoTien as N'Tiền/Tín Chỉ', TenKhoa FROM MonHoc, Khoa  WHERE MonHoc.IdKhoa=Khoa.IdKhoa and Khoa.TenKhoa like N'%Công Nghệ Thông Tin%'
 -------------------
 -- Quản lý Giảng Viên
+	SELECT count(*)as N'SL' FROM tblNguoiDung, DangKy where tblNguoiDung.IdNguoiDung = DangKy.IdGV and DangKy.Status in (1,2,3) and DangKy.IdGV = 2
 	-- Lấy thông tin Trình Độ vào combobox
 	SELECT TenTrinhDo FROM TrinhDo WHERE IdTrinhDo in (4,5,6) 
 	-- Danh sách Vô Table
@@ -107,6 +108,7 @@
 	SELECT TenTrinhDo FROM TrinhDo WHERE IdTrinhDo in (1,2,3) 
 	-- Lấy thông tin Trình Độ vào combobox
 	SELECT TenLop FROM Lop  
+	SELECT IdLop FROM Lop WHERE TenLop =N''  
 	SELECT TenLop FROM Lop, Khoa WHERE Lop.IdKhoa=Khoa.IdKhoa and Khoa.IdKhoa =1
 	-- Danh sách Vô Table
 	SELECT IdNguoiDung as N'Mã Người Dùng',MaNguoiDung as N'Tài khoản', HoTen as N'Họ và Tên', NgaySinh as N'Ngày Sinh', DiaChi as N'Địa Chỉ', Sdt as N'Số điện thoại',Email, TenTrinhDo as N'Trình Độ' , TenLop as N'Lớp' FROM tblNguoiDung, TrinhDo , Lop WHERE tblNguoiDung.IdTrinhDo=TrinhDo.IdTrinhDo and tblNguoiDung.IdLop=Lop.IdLop and tblNguoiDung.IdQuyen = 3
