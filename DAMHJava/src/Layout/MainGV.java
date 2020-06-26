@@ -167,10 +167,20 @@ public class MainGV extends javax.swing.JFrame {
 
         jMDangKyLichHoc.setIcon(new javax.swing.ImageIcon("C:\\Users\\Tnam1\\OneDrive\\Desktop\\IconJava\\GV\\icons8_compose_32px.png")); // NOI18N
         jMDangKyLichHoc.setText("Đăng Ký Lịch Học");
+        jMDangKyLichHoc.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jMDangKyLichHocMouseClicked(evt);
+            }
+        });
         jMenuBar1.add(jMDangKyLichHoc);
 
         jMXemLichHoc.setIcon(new javax.swing.ImageIcon("C:\\Users\\Tnam1\\OneDrive\\Desktop\\IconJava\\GV\\icons8_schedule_32px.png")); // NOI18N
         jMXemLichHoc.setText("Xem Lịch Dạy");
+        jMXemLichHoc.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jMXemLichHocMouseClicked(evt);
+            }
+        });
         jMenuBar1.add(jMXemLichHoc);
 
         setJMenuBar(jMenuBar1);
@@ -197,6 +207,22 @@ public class MainGV extends javax.swing.JFrame {
         jTContent.add("Thay đổi mật khẩu", frm);
     }//GEN-LAST:event_jMDoiMatKhauActionPerformed
 
+    private void jMDangKyLichHocMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jMDangKyLichHocMouseClicked
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jMDangKyLichHocMouseClicked
+
+    private void jMXemLichHocMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jMXemLichHocMouseClicked
+        // TODO add your handling code here:
+        frmGVLichDay frm = new frmGVLichDay();
+        jTContent.removeAll();
+        jTContent.add("Lịch dạy", frm);
+    }//GEN-LAST:event_jMXemLichHocMouseClicked
+    public void Doimatkhau()
+    {
+        frmGVdoimatkhau frm = new frmGVdoimatkhau();
+        jTContent.removeAll();
+        jTContent.add("Thay đổi mật khẩu", frm);
+    }
     /**
      * @param args the command line arguments
      */

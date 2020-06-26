@@ -5,6 +5,16 @@
  */
 package Layout;
 
+import DBConnect.Database;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
+import java.sql.SQLException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+
 /**
  *
  * @author Tnam1
@@ -14,10 +24,177 @@ public class frmQuanLyXetDuyetMoLop extends javax.swing.JPanel {
     /**
      * Creates new form frmQuanLyXetDuyetMoLop
      */
+    Database db;
     public frmQuanLyXetDuyetMoLop() {
         initComponents();
+        db =new Database();
+        NapDuLieuXetMonDangKyVaoTable();
+        NapBangBuoivaoCbBuoi();
+        NapBangHocKivaoCbHocKi();
+        NapBangPhongvaoCbPhong();
+        NapBangThuvaoCbThu();
+        NapBangMonvaoCbMon();
+        NapBangGiangVienvaoCbGiangVien();
     }
-
+     private void NapBangHocKivaoCbHocKi()
+    {
+        try {
+            String sSQL = "SELECT TenHocKi  FROM HocKi ";
+            ResultSet rs = db.TruyVan(sSQL);
+            if(rs == null) 
+            {
+                JOptionPane.showMessageDialog(this,"Không truy vấn được trong CSDL");
+                return;
+            }
+            cbHocKi.addItem("Chọn Học Kì:");
+            while(rs.next())
+            {
+                cbHocKi.addItem(rs.getString(1));
+            }
+        } catch (SQLException ex) {
+            //Logger.getLogger(MyFrame.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(this,"Lỗi truy vấn");
+        } 
+    }
+    private void NapBangGiangVienvaoCbGiangVien()
+    {
+        try {
+            String sSQL = "SELECT HoTen FROM tblNguoiDung WHERE IdQuyen=2";
+            ResultSet rs = db.TruyVan(sSQL);
+            if(rs == null) 
+            {
+                JOptionPane.showMessageDialog(this,"Không truy vấn được trong CSDL");
+                return;
+            }
+            cbGiangVien.addItem("Chọn Giáo Viên:");
+            while(rs.next())
+            {
+                cbGiangVien.addItem(rs.getString(1));
+            }
+        } catch (SQLException ex) {
+            //Logger.getLogger(MyFrame.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(this,"Lỗi truy vấn");
+        } 
+    }
+    private void NapBangThuvaoCbThu()
+    {
+        try {
+            String sSQL = "SELECT TenThu FROM Thu";
+            ResultSet rs = db.TruyVan(sSQL);
+            if(rs == null) 
+            {
+                JOptionPane.showMessageDialog(this,"Không truy vấn được trong CSDL");
+                return;
+            }
+            cbThu.addItem("Chọn Thứ:");
+            while(rs.next())
+            {
+                cbThu.addItem(rs.getString(1));
+            }
+        } catch (SQLException ex) {
+            //Logger.getLogger(MyFrame.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(this,"Lỗi truy vấn");
+        } 
+    }
+     private void NapBangPhongvaoCbPhong()
+    {
+        try {
+            String sSQL = "SELECT TenPhong FROM PhongHoc";
+            ResultSet rs = db.TruyVan(sSQL);
+            if(rs == null) 
+            {
+                JOptionPane.showMessageDialog(this,"Không truy vấn được trong CSDL");
+                return;
+            }
+            cbPhong.addItem("Chọn Phòng:");
+            while(rs.next())
+            {
+                cbPhong.addItem(rs.getString(1));
+            }
+        } catch (SQLException ex) {
+            //Logger.getLogger(MyFrame.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(this,"Lỗi truy vấn");
+        } 
+    }
+      private void NapBangBuoivaoCbBuoi()
+    {
+        try {
+            String sSQL = "SELECT (Buoi+' | '+TietBD) as N'Buổi' FROM ThoiGianHoc";
+            ResultSet rs = db.TruyVan(sSQL);
+            if(rs == null) 
+            {
+                JOptionPane.showMessageDialog(this,"Không truy vấn được trong CSDL");
+                return;
+            }
+            cbBuoi.addItem("Chọn Buổi:");
+            while(rs.next())
+            {
+                cbBuoi.addItem(rs.getString(1));
+            }
+        } catch (SQLException ex) {
+            //Logger.getLogger(MyFrame.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(this,"Lỗi truy vấn");
+        } 
+    }
+         private void NapBangMonvaoCbMon()
+    {
+        try {
+            String sSQL = "SELECT TenMonHoc FROM MonHoc";
+            ResultSet rs = db.TruyVan(sSQL);
+            if(rs == null) 
+            {
+                JOptionPane.showMessageDialog(this,"Không truy vấn được trong CSDL");
+                return;
+            }
+            cbMon.addItem("Chọn Môn:");
+            while(rs.next())
+            {
+                cbMon.addItem(rs.getString(1));
+            }
+        } catch (SQLException ex) {
+            //Logger.getLogger(MyFrame.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(this,"Lỗi truy vấn");
+        } 
+    }
+    private void NapDuLieuXetMonDangKyVaoTable()
+    {
+        try {
+            DefaultTableModel modelTable = new DefaultTableModel();
+            String sSelect = "	SELECT IdDangKy as N'Mã Đăng Ký', TenMonHoc as N'Môn Học',TenThu as N'Thứ', Buoi as N'Buổi', TietBD as N'Tiết', TenPhong as N'Phòng', SiSo as N'Sỉ Số', HoTen as N'Giảng Viên', TenHocKi as N'Học Kì' " +
+            "	FRom DangKy, PhongHoc,Thu,ThoiGianHoc,MonHoc,tblNguoiDung, HocKi" +
+            "	where DangKy.IdGV=tblNguoiDung.IdNguoiDung " +
+            "		  and DangKy.IdHocKi = HocKi.IdHocKi " +
+            "		  and DangKy.IdMonHoc=MonHoc.IdMonHoc " +
+            "		  and DangKy.IdThoiGian=ThoiGianHoc.IdThoiGian" +
+            "		  and DangKy.IdPhong = PhongHoc.IdPhong" +
+            "		  and DangKy.IdThu = Thu.IdThu and Status = 0";
+            ResultSet rs = db.TruyVan(sSelect);
+            if(rs == null)
+            {
+                JOptionPane.showMessageDialog(this,"Không thể truy cập CSDL");
+                return;
+            }
+            ResultSetMetaData md = rs.getMetaData();
+            int numCols = md.getColumnCount();
+            Object []arr = new Object[numCols];
+            for(int i=0;i<numCols;i++)
+            {
+                arr[i]=md.getColumnName(i+1);  
+            }
+            modelTable.setColumnIdentifiers(arr);
+            
+            while(rs.next())
+            {
+                for(int i=0;i<numCols;i++)
+                    arr[i]=rs.getObject(i+1);
+                modelTable.addRow(arr);
+            }
+            tblXetduyet.setModel(modelTable);
+        } catch (SQLException ex) {
+            //Logger.getLogger(MyFrame.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(this,"Truy cập DBConnect Thất bại");
+        }
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -31,16 +208,14 @@ public class frmQuanLyXetDuyetMoLop extends javax.swing.JPanel {
         jLabel1 = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        tblXetduyet = new javax.swing.JTable();
         jPanel3 = new javax.swing.JPanel();
-        jTextField1 = new javax.swing.JTextField();
-        jComboBox1 = new javax.swing.JComboBox<>();
-        jComboBox2 = new javax.swing.JComboBox<>();
-        jComboBox3 = new javax.swing.JComboBox<>();
-        jComboBox4 = new javax.swing.JComboBox<>();
-        jComboBox5 = new javax.swing.JComboBox<>();
-        jTextField2 = new javax.swing.JTextField();
-        jTextField3 = new javax.swing.JTextField();
+        txtMaDangKy = new javax.swing.JTextField();
+        cbGiangVien = new javax.swing.JComboBox<>();
+        cbPhong = new javax.swing.JComboBox<>();
+        cbBuoi = new javax.swing.JComboBox<>();
+        cbHocKi = new javax.swing.JComboBox<>();
+        cbThu = new javax.swing.JComboBox<>();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
@@ -49,7 +224,14 @@ public class frmQuanLyXetDuyetMoLop extends javax.swing.JPanel {
         jLabel7 = new javax.swing.JLabel();
         jLabel8 = new javax.swing.JLabel();
         jLabel9 = new javax.swing.JLabel();
-        jButton1 = new javax.swing.JButton();
+        btnKichHoat = new javax.swing.JButton();
+        txtDateOpen = new com.toedter.calendar.JDateChooser();
+        txtDateClose = new com.toedter.calendar.JDateChooser();
+        btnXoa = new javax.swing.JButton();
+        cbMon = new javax.swing.JComboBox<>();
+        jLabel10 = new javax.swing.JLabel();
+        txtSiSo = new javax.swing.JTextField();
+        jLabel11 = new javax.swing.JLabel();
 
         setMinimumSize(new java.awt.Dimension(1055, 578));
         setPreferredSize(new java.awt.Dimension(1055, 578));
@@ -82,7 +264,7 @@ public class frmQuanLyXetDuyetMoLop extends javax.swing.JPanel {
 
         jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Danh sách", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Arial", 3, 13))); // NOI18N
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        tblXetduyet.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
                 {null, null, null, null},
@@ -93,7 +275,12 @@ public class frmQuanLyXetDuyetMoLop extends javax.swing.JPanel {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
-        jScrollPane1.setViewportView(jTable1);
+        tblXetduyet.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tblXetduyetMouseClicked(evt);
+            }
+        });
+        jScrollPane1.setViewportView(tblXetduyet);
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -139,8 +326,27 @@ public class frmQuanLyXetDuyetMoLop extends javax.swing.JPanel {
         jLabel9.setFont(new java.awt.Font("Arial", 3, 13)); // NOI18N
         jLabel9.setText("Học Kì");
 
-        jButton1.setFont(new java.awt.Font("Arial", 3, 13)); // NOI18N
-        jButton1.setText("Kích Hoạt");
+        btnKichHoat.setFont(new java.awt.Font("Arial", 3, 13)); // NOI18N
+        btnKichHoat.setText("Kích Hoạt");
+        btnKichHoat.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnKichHoatActionPerformed(evt);
+            }
+        });
+
+        btnXoa.setFont(new java.awt.Font("Tahoma", 3, 13)); // NOI18N
+        btnXoa.setText("Xóa");
+        btnXoa.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnXoaActionPerformed(evt);
+            }
+        });
+
+        jLabel10.setFont(new java.awt.Font("Tahoma", 3, 13)); // NOI18N
+        jLabel10.setText("Môn");
+
+        jLabel11.setFont(new java.awt.Font("Tahoma", 3, 13)); // NOI18N
+        jLabel11.setText("Sỉ số");
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -149,39 +355,51 @@ public class frmQuanLyXetDuyetMoLop extends javax.swing.JPanel {
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addGap(25, 25, 25)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, 174, Short.MAX_VALUE)
                     .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, 92, Short.MAX_VALUE))
-                .addGap(50, 50, 50)
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, 92, Short.MAX_VALUE)
+                            .addComponent(jLabel11, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jTextField1)
-                    .addComponent(jComboBox5, 0, 216, Short.MAX_VALUE)
-                    .addComponent(jTextField3))
-                .addGap(30, 30, 30)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jLabel7, javax.swing.GroupLayout.DEFAULT_SIZE, 105, Short.MAX_VALUE)
-                    .addComponent(jLabel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jLabel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addGap(51, 51, 51)
+                    .addComponent(txtSiSo)
+                    .addComponent(txtMaDangKy)
+                    .addComponent(cbThu, 0, 216, Short.MAX_VALUE)
+                    .addComponent(txtDateOpen, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 216, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jComboBox3, javax.swing.GroupLayout.PREFERRED_SIZE, 216, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 64, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 64, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(30, 30, 30)
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addGroup(jPanel3Layout.createSequentialGroup()
+                                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(jLabel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(jLabel5, javax.swing.GroupLayout.DEFAULT_SIZE, 105, Short.MAX_VALUE))
+                                .addGap(51, 51, 51)
+                                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(cbGiangVien, 0, 216, Short.MAX_VALUE)
+                                    .addComponent(cbBuoi, 0, 216, Short.MAX_VALUE)))
+                            .addGroup(jPanel3Layout.createSequentialGroup()
+                                .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 28, Short.MAX_VALUE)
+                                .addComponent(txtDateClose, javax.swing.GroupLayout.PREFERRED_SIZE, 216, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jComboBox2, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jComboBox4, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 64, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 64, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel10, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(13, 13, 13)
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(cbMon, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(cbPhong, 0, 142, Short.MAX_VALUE)
+                            .addComponent(cbHocKi, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addGap(28, 28, 28))
                     .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 216, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 105, Short.MAX_VALUE)
-                        .addComponent(jButton1)
-                        .addGap(77, 77, 77))))
+                        .addGap(104, 104, 104)
+                        .addComponent(btnKichHoat)
+                        .addGap(27, 27, 27)
+                        .addComponent(btnXoa)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -189,46 +407,148 @@ public class frmQuanLyXetDuyetMoLop extends javax.swing.JPanel {
                 .addContainerGap()
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(txtMaDangKy, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(cbGiangVien, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jLabel8)
                     .addComponent(jLabel5)
                     .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
+                    .addComponent(cbPhong))
                 .addGap(10, 10, 10)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jComboBox4, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(cbHocKi, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel6)
                     .addComponent(jLabel3)
                     .addComponent(jLabel9)
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addGap(6, 6, 6)
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jComboBox5, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jComboBox3, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addGap(18, 18, Short.MAX_VALUE)
+                            .addComponent(cbThu, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(cbBuoi, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addGap(18, 18, 18)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jButton1))
-                    .addComponent(jLabel4)
-                    .addComponent(jLabel7))
-                .addContainerGap())
+                    .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addComponent(jLabel4)
+                        .addComponent(txtDateOpen, javax.swing.GroupLayout.DEFAULT_SIZE, 35, Short.MAX_VALUE)
+                        .addComponent(jLabel7)
+                        .addComponent(txtDateClose, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(cbMon, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel10))
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addGap(18, 18, 18)
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel3Layout.createSequentialGroup()
+                                .addGap(1, 1, 1)
+                                .addComponent(btnXoa, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                .addComponent(txtSiSo, javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(btnKichHoat, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addGap(10, 10, 10)
+                        .addComponent(jLabel11)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        add(jPanel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 380, 1070, 190));
+        add(jPanel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 380, 1070, 230));
     }// </editor-fold>//GEN-END:initComponents
 
+    private void tblXetduyetMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblXetduyetMouseClicked
+        // TODO add your handling code here:
+        NapItemDuocchon();
+    }//GEN-LAST:event_tblXetduyetMouseClicked
+
+    private void btnXoaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnXoaActionPerformed
+        // TODO add your handling code here:
+        if (tblXetduyet.getSelectedRow() < 0) { 
+            JOptionPane.showMessageDialog(this,"Phải chọn một dòng để sửa hoặc xóa!");
+            return;
+        }
+        int row = tblXetduyet.getSelectedRow();
+        int maDK = (int)tblXetduyet.getValueAt(row, 0);
+        String SQL = "DELETE FROM DangKy WHERE IdDangKy ="+maDK;
+        int i = db.ThemXoaSua(SQL);
+        if(i > 0)
+        {
+            JOptionPane.showMessageDialog(this,"Xóa thành công!");
+            NapDuLieuXetMonDangKyVaoTable();
+        }
+        else
+        {
+            JOptionPane.showMessageDialog(this,"Xóa thất bại!");
+            NapDuLieuXetMonDangKyVaoTable();
+        }
+    }//GEN-LAST:event_btnXoaActionPerformed
+
+    private void btnKichHoatActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnKichHoatActionPerformed
+        // TODO add your handling code here:
+        if (tblXetduyet.getSelectedRow() < 0) { 
+            JOptionPane.showMessageDialog(this,"Phải chọn một dòng để sửa hoặc xóa!");
+            return;
+        }
+        int row = tblXetduyet.getSelectedRow();
+        int maDK = (int)tblXetduyet.getValueAt(row, 0);
+       
+        Date ns = txtDateOpen.getDate();
+        String pattern = "yyyy-MM-dd"; //01/24/1980
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
+        String dateopen = simpleDateFormat.format(ns);
+        Date ns1 = txtDateClose.getDate();
+        String pattern1 = "yyyy-MM-dd"; //01/24/1980
+        SimpleDateFormat simpleDateForma1t = new SimpleDateFormat(pattern1);
+        String dateclose = simpleDateFormat.format(ns1);
+        String SQL = "UPDATE DangKy SET Status ='1',ThoiGianMo='"+dateopen+"', ThoiGianDong = '"+dateclose+"' WHERE IdDangKy = "+maDK;
+        int i = db.ThemXoaSua(SQL);
+        if(i > 0)
+        {
+            JOptionPane.showMessageDialog(this,"Mở lớp thành công");
+            NapDuLieuXetMonDangKyVaoTable();
+        }
+        else
+        {
+            JOptionPane.showMessageDialog(this,"Mở lớp thất bại!");
+            NapDuLieuXetMonDangKyVaoTable();
+        }
+    }//GEN-LAST:event_btnKichHoatActionPerformed
+    private void NapItemDuocchon()
+    {
+        if (tblXetduyet.getSelectedRow() < 0) {
+            return;
+        }
+        int row = tblXetduyet.getSelectedRow();
+        txtMaDangKy.setText(tblXetduyet.getValueAt(row, 0).toString());
+        for(int i=0;i<cbMon.getItemCount();i++)
+            if(cbMon.getItemAt(i).equals((String)tblXetduyet.getValueAt(row, 1)))
+                cbMon.setSelectedIndex(i);
+        for(int i=0;i<cbThu.getItemCount();i++)
+            if(cbThu.getItemAt(i).equals((String)tblXetduyet.getValueAt(row, 2)))
+                cbThu.setSelectedIndex(i);
+        for(int i=0;i<cbBuoi.getItemCount();i++)
+            if(cbBuoi.getItemAt(i).equals((String)tblXetduyet.getValueAt(row, 3)+ " | "+(String)tblXetduyet.getValueAt(row, 4)))
+                cbBuoi.setSelectedIndex(i);
+        for(int i=0;i<cbPhong.getItemCount();i++)
+            if(cbPhong.getItemAt(i).equals((String)tblXetduyet.getValueAt(row, 5)))
+                cbPhong.setSelectedIndex(i);
+        txtSiSo.setText(tblXetduyet.getValueAt(row, 6).toString());
+        for(int i=0;i<cbGiangVien.getItemCount();i++)
+            if(cbGiangVien.getItemAt(i).equals((String)tblXetduyet.getValueAt(row, 7)))
+                cbGiangVien.setSelectedIndex(i);
+        for(int i=0;i<cbHocKi.getItemCount();i++)
+            if(cbHocKi.getItemAt(i).equals((String)tblXetduyet.getValueAt(row, 8)))
+                cbHocKi.setSelectedIndex(i);
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JComboBox<String> jComboBox1;
-    private javax.swing.JComboBox<String> jComboBox2;
-    private javax.swing.JComboBox<String> jComboBox3;
-    private javax.swing.JComboBox<String> jComboBox4;
-    private javax.swing.JComboBox<String> jComboBox5;
+    private javax.swing.JButton btnKichHoat;
+    private javax.swing.JButton btnXoa;
+    private javax.swing.JComboBox<String> cbBuoi;
+    private javax.swing.JComboBox<String> cbGiangVien;
+    private javax.swing.JComboBox<String> cbHocKi;
+    private javax.swing.JComboBox<String> cbMon;
+    private javax.swing.JComboBox<String> cbPhong;
+    private javax.swing.JComboBox<String> cbThu;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -241,9 +561,10 @@ public class frmQuanLyXetDuyetMoLop extends javax.swing.JPanel {
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable1;
-    private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextField jTextField2;
-    private javax.swing.JTextField jTextField3;
+    private javax.swing.JTable tblXetduyet;
+    private com.toedter.calendar.JDateChooser txtDateClose;
+    private com.toedter.calendar.JDateChooser txtDateOpen;
+    private javax.swing.JTextField txtMaDangKy;
+    private javax.swing.JTextField txtSiSo;
     // End of variables declaration//GEN-END:variables
 }

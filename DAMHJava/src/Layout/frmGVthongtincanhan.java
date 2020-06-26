@@ -162,6 +162,11 @@ public class frmGVthongtincanhan extends javax.swing.JPanel {
         });
 
         btndoimatkhau.setText("Đổi mật khẩu");
+        btndoimatkhau.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btndoimatkhauActionPerformed(evt);
+            }
+        });
 
         jLabel7.setFont(new java.awt.Font("Tahoma", 3, 13)); // NOI18N
         jLabel7.setText("Trình Độ");
@@ -267,6 +272,11 @@ public class frmGVthongtincanhan extends javax.swing.JPanel {
         }
         
     }//GEN-LAST:event_btnCapnhapthongtinActionPerformed
+
+    private void btndoimatkhauActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btndoimatkhauActionPerformed
+        // TODO add your handling code here:
+        new MainGV().Doimatkhau();
+    }//GEN-LAST:event_btndoimatkhauActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

@@ -134,6 +134,11 @@ public class frmQuanlyThongtincanhan extends javax.swing.JPanel {
         });
 
         btnDoimatkhau.setText("Đổi mật khẩu");
+        btnDoimatkhau.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnDoimatkhauActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -221,6 +226,10 @@ public class frmQuanlyThongtincanhan extends javax.swing.JPanel {
             JOptionPane.showMessageDialog(this,"Bạn đã cập nhập thông tin Thất bại ~_~");
         } 
     }//GEN-LAST:event_btnCapNhapActionPerformed
+
+    private void btnDoimatkhauActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDoimatkhauActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnDoimatkhauActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

@@ -63,6 +63,9 @@
             </Property>
             <Property name="text" type="java.lang.String" value="&#x110;&#x103;ng K&#xfd; L&#x1ecb;ch H&#x1ecd;c"/>
           </Properties>
+          <Events>
+            <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="jMDangKyLichHocMouseClicked"/>
+          </Events>
         </Menu>
         <Menu class="javax.swing.JMenu" name="jMXemLichHoc">
           <Properties>
@@ -71,6 +74,9 @@
             </Property>
             <Property name="text" type="java.lang.String" value="Xem L&#x1ecb;ch D&#x1ea1;y"/>
           </Properties>
+          <Events>
+            <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="jMXemLichHocMouseClicked"/>
+          </Events>
         </Menu>
       </SubComponents>
     </Menu>

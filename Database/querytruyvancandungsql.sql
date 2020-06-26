@@ -135,6 +135,12 @@
 	SElect * from Thu
 	SELECT * from PhongHoc
 	SELECT * from DangKy
+	SELECT TenHocKi  FROM HocKi
+	SELECT HoTen FROM tblNguoiDung WHERE IdQuyen=2
+	SELECT TenThu FROM Thu
+	SELECT TenPhong FROM PhongHoc
+	SELECT TenMonHoc FROM MonHoc
+	SELECT (Buoi+' | '+TietBD) as N'Buổi' FROM ThoiGianHoc
 	-- Nạp dữ liệu vào table
 	SELECT IdDangKy as N'Mã Đăng Ký', TenMonHoc as N'Môn Học',TenThu as N'Thứ', Buoi as N'Buổi', TietBD as N'Tiết', TenPhong as N'Phòng', SiSo as N'Sỉ Số', HoTen as N'Giảng Viên', TenHocKi as N'Học Kì' 
 	FRom DangKy, PhongHoc,Thu,ThoiGianHoc,MonHoc,tblNguoiDung, HocKi 
@@ -183,6 +189,15 @@
 		  and DangKy.IdThoiGian=ThoiGianHoc.IdThoiGian
 		  and DangKy.IdPhong = PhongHoc.IdPhong
 		  and DangKy.IdThu = Thu.IdThu and Status = 2 and HoTen like N'%A%'
+
+		SELECT IdDangKy as N'Mã Đăng Ký', TenMonHoc as N'Môn Học',TenThu as N'Thứ', Buoi as N'Buổi', TietBD as N'Tiết', TenPhong as N'Phòng',  HoTen as N'Giảng Viên', TenHocKi as N'Học Kì' , SiSoHienTai as N'Số lượng Sinh Viên', SoTiet as N'Số Tiết'
+	FRom DangKy, PhongHoc,Thu,ThoiGianHoc,MonHoc,tblNguoiDung, HocKi 
+	where DangKy.IdGV=tblNguoiDung.IdNguoiDung 
+		  and DangKy.IdHocKi = HocKi.IdHocKi 
+		  and DangKy.IdMonHoc=MonHoc.IdMonHoc 
+		  and DangKy.IdThoiGian=ThoiGianHoc.IdThoiGian
+		  and DangKy.IdPhong = PhongHoc.IdPhong
+		  and DangKy.IdThu = Thu.IdThu and Status = 2 and TenHocKi like N'2'
 	-- Thêm mới lớp giảng dạy
 	-- Kiểm tra xem đã tồn tại chưa
 	SELECT count(*) from DangKy where IdMonHoc=1 and IdThu=1 and IdThoiGian=1 and IdHocKi=1 and IdPhong=1 and Status =1

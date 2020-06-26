@@ -20,7 +20,12 @@ public class MainSV extends javax.swing.JFrame {
         jTContent.removeAll();
         jTContent.add("Trang Chủ", frm);
     }
-
+     public void Doimatkhau()
+    {
+        frmSVthaydoimatkhau frm = new frmSVthaydoimatkhau();
+        jTContent.removeAll();
+        jTContent.add("Thay đổi mật khẩu", frm);
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always

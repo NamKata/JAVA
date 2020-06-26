@@ -5,6 +5,13 @@
  */
 package Layout;
 
+import DBConnect.Database;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
+import java.sql.SQLException;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+
 /**
  *
  * @author Tnam1
@@ -14,10 +21,114 @@ public class frmQuanLyLopGiangDay extends javax.swing.JPanel {
     /**
      * Creates new form frmQuanLyXetDuyetMoLop
      */
+    Database db;
     public frmQuanLyLopGiangDay() {
         initComponents();
+        db = new Database();
+        NapBangHocKivaoCbHocKi();
+        NapDuLieuXetMonDangKyVaoTable();
+        NapBangGiangVienvaoCbGiangVien();
+        NapBangMonvaoCbMon();
     }
-
+      private void NapBangGiangVienvaoCbGiangVien()
+    {
+        try {
+            String sSQL = "SELECT HoTen FROM tblNguoiDung WHERE IdQuyen=2";
+            ResultSet rs = db.TruyVan(sSQL);
+            if(rs == null) 
+            {
+                JOptionPane.showMessageDialog(this,"Không truy vấn được trong CSDL");
+                return;
+            }
+            cbGiangVien.addItem("Chọn Giáo Viên:");
+            while(rs.next())
+            {
+                cbGiangVien.addItem(rs.getString(1));
+            }
+        } catch (SQLException ex) {
+            //Logger.getLogger(MyFrame.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(this,"Lỗi truy vấn");
+        } 
+    }
+    private void NapBangHocKivaoCbHocKi()
+    {
+        try {
+            String sSQL = "SELECT TenHocKi  FROM HocKi ";
+            ResultSet rs = db.TruyVan(sSQL);
+            if(rs == null) 
+            {
+                JOptionPane.showMessageDialog(this,"Không truy vấn được trong CSDL");
+                return;
+            }
+            cbHocKi.addItem("Chọn Học Kì:");
+            while(rs.next())
+            {
+                cbHocKi.addItem(rs.getString(1));
+            }
+        } catch (SQLException ex) {
+            //Logger.getLogger(MyFrame.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(this,"Lỗi truy vấn");
+        } 
+    }
+     private void NapDuLieuXetMonDangKyVaoTable()
+    {
+        try {
+            DefaultTableModel modelTable = new DefaultTableModel();
+            String sSelect = "	SELECT IdDangKy as N'Mã Đăng Ký', TenMonHoc as N'Môn Học',TenThu as N'Thứ', Buoi as N'Buổi', TietBD as N'Tiết', TenPhong as N'Phòng',  HoTen as N'Giảng Viên', TenHocKi as N'Học Kì' , SiSoHienTai as N'Số lượng Sinh Viên', SoTiet as N'Số Tiết'" +
+"	FRom DangKy, PhongHoc,Thu,ThoiGianHoc,MonHoc,tblNguoiDung, HocKi " +
+"	where DangKy.IdGV=tblNguoiDung.IdNguoiDung " +
+"		  and DangKy.IdHocKi = HocKi.IdHocKi " +
+"		  and DangKy.IdMonHoc=MonHoc.IdMonHoc " +
+"		  and DangKy.IdThoiGian=ThoiGianHoc.IdThoiGian" +
+"		  and DangKy.IdPhong = PhongHoc.IdPhong" +
+"		  and DangKy.IdThu = Thu.IdThu and Status = 2";
+            ResultSet rs = db.TruyVan(sSelect);
+            if(rs == null)
+            {
+                JOptionPane.showMessageDialog(this,"Không thể truy cập CSDL");
+                return;
+            }
+            ResultSetMetaData md = rs.getMetaData();
+            int numCols = md.getColumnCount();
+            Object []arr = new Object[numCols];
+            for(int i=0;i<numCols;i++)
+            {
+                arr[i]=md.getColumnName(i+1);  
+            }
+            modelTable.setColumnIdentifiers(arr);
+            
+            while(rs.next())
+            {
+                for(int i=0;i<numCols;i++)
+                    arr[i]=rs.getObject(i+1);
+                modelTable.addRow(arr);
+            }
+            tblLopGiangday.setModel(modelTable);
+        } catch (SQLException ex) {
+            //Logger.getLogger(MyFrame.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(this,"Truy cập DBConnect Thất bại");
+        }
+    }
+    private void NapBangMonvaoCbMon()
+    {
+        try {
+            String sSQL = "SELECT TenMonHoc FROM MonHoc";
+            ResultSet rs = db.TruyVan(sSQL);
+            if(rs == null) 
+            {
+                JOptionPane.showMessageDialog(this,"Không truy vấn được trong CSDL");
+                return;
+            }
+            cbMon.addItem("Chọn Môn:");
+            while(rs.next())
+            {
+                cbMon.addItem(rs.getString(1));
+            }
+        } catch (SQLException ex) {
+            //Logger.getLogger(MyFrame.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(this,"Lỗi truy vấn");
+        } 
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -32,9 +143,13 @@ public class frmQuanLyLopGiangDay extends javax.swing.JPanel {
         jPanel2 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         tblLopGiangday = new javax.swing.JTable();
-        jComboBox6 = new javax.swing.JComboBox<>();
-        jComboBox7 = new javax.swing.JComboBox<>();
-        jTextField1 = new javax.swing.JTextField();
+        cbGiangVien = new javax.swing.JComboBox<>();
+        cbHocKi = new javax.swing.JComboBox<>();
+        jLabel2 = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
+        jLabel4 = new javax.swing.JLabel();
+        btnTimkiem = new javax.swing.JButton();
+        cbMon = new javax.swing.JComboBox<>();
 
         setMinimumSize(new java.awt.Dimension(1055, 578));
         setPreferredSize(new java.awt.Dimension(1055, 578));
@@ -80,6 +195,23 @@ public class frmQuanLyLopGiangDay extends javax.swing.JPanel {
         ));
         jScrollPane1.setViewportView(tblLopGiangday);
 
+        jLabel2.setFont(new java.awt.Font("Tahoma", 3, 13)); // NOI18N
+        jLabel2.setText("Tên Môn");
+
+        jLabel3.setFont(new java.awt.Font("Tahoma", 3, 13)); // NOI18N
+        jLabel3.setText("Giảng Viên");
+
+        jLabel4.setFont(new java.awt.Font("Tahoma", 3, 13)); // NOI18N
+        jLabel4.setText("Học Kì");
+
+        btnTimkiem.setFont(new java.awt.Font("Tahoma", 3, 13)); // NOI18N
+        btnTimkiem.setText("Tìm kiếm");
+        btnTimkiem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnTimkiemActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
@@ -89,38 +221,390 @@ public class frmQuanLyLopGiangDay extends javax.swing.JPanel {
                 .addComponent(jScrollPane1)
                 .addContainerGap())
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                .addGap(109, 109, 109)
-                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 254, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(105, 105, 105)
-                .addComponent(jComboBox6, javax.swing.GroupLayout.PREFERRED_SIZE, 183, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(79, 79, 79)
-                .addComponent(jComboBox7, javax.swing.GroupLayout.PREFERRED_SIZE, 183, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(145, Short.MAX_VALUE))
+                .addGap(35, 35, 35)
+                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(cbMon, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(36, 36, 36)
+                .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(cbGiangVien, javax.swing.GroupLayout.PREFERRED_SIZE, 183, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(27, 27, 27)
+                .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 53, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(35, 35, 35)
+                .addComponent(cbHocKi, javax.swing.GroupLayout.PREFERRED_SIZE, 183, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(33, 33, 33)
+                .addComponent(btnTimkiem)
+                .addContainerGap(29, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jComboBox6, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jComboBox7, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(17, 17, 17)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 440, Short.MAX_VALUE)
+                    .addComponent(cbHocKi, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel2)
+                    .addComponent(jLabel4)
+                    .addComponent(btnTimkiem)
+                    .addComponent(jLabel3)
+                    .addComponent(cbGiangVien, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(cbMon, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 439, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
         add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 50, 1070, 520));
     }// </editor-fold>//GEN-END:initComponents
 
+    private void btnTimkiemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTimkiemActionPerformed
+        // TODO add your handling code here:
+        if(cbMon.getSelectedIndex() != 0 && cbGiangVien.getSelectedIndex() == 0 && cbHocKi.getSelectedIndex() ==0)
+        {
+            try {
+            DefaultTableModel modelTable = new DefaultTableModel();
+            String sSelect = "	SELECT IdDangKy as N'Mã Đăng Ký', TenMonHoc as N'Môn Học',TenThu as N'Thứ', Buoi as N'Buổi', TietBD as N'Tiết', TenPhong as N'Phòng',  HoTen as N'Giảng Viên', TenHocKi as N'Học Kì' , SiSoHienTai as N'Số lượng Sinh Viên', SoTiet as N'Số Tiết'" +
+"	FRom DangKy, PhongHoc,Thu,ThoiGianHoc,MonHoc,tblNguoiDung, HocKi " +
+"	where DangKy.IdGV=tblNguoiDung.IdNguoiDung " +
+"		  and DangKy.IdHocKi = HocKi.IdHocKi " +
+"		  and DangKy.IdMonHoc=MonHoc.IdMonHoc " +
+"		  and DangKy.IdThoiGian=ThoiGianHoc.IdThoiGian" +
+"		  and DangKy.IdPhong = PhongHoc.IdPhong" +
+"		  and DangKy.IdThu = Thu.IdThu and Status = 2 and TenMonHoc = N'"+cbMon.getSelectedItem().toString()+"'";
+            ResultSet rs = db.TruyVan(sSelect);
+            if(rs == null)
+            {
+                JOptionPane.showMessageDialog(this,"Không thể truy cập CSDL");
+                return;
+            }
+            ResultSetMetaData md = rs.getMetaData();
+            int numCols = md.getColumnCount();
+            Object []arr = new Object[numCols];
+            for(int i=0;i<numCols;i++)
+            {
+                arr[i]=md.getColumnName(i+1);  
+            }
+            modelTable.setColumnIdentifiers(arr);
+            
+            while(rs.next())
+            {
+                for(int i=0;i<numCols;i++)
+                    arr[i]=rs.getObject(i+1);
+                modelTable.addRow(arr);
+            }
+            if(modelTable.getRowCount() > 0)
+            {
+                tblLopGiangday.setModel(modelTable);
+            }
+            else
+            {
+                JOptionPane.showMessageDialog(this,"Truy vấn thất bại");
+                NapDuLieuXetMonDangKyVaoTable();
+            }
+            } catch (SQLException ex) {
+                //Logger.getLogger(MyFrame.class.getName()).log(Level.SEVERE, null, ex);
+                JOptionPane.showMessageDialog(this,"Truy cập DBConnect Thất bại");
+            }
+        }
+        else if(cbMon.getSelectedIndex() == 0 && cbGiangVien.getSelectedIndex() != 0 && cbHocKi.getSelectedIndex() ==0)
+        {
+             try {
+            DefaultTableModel modelTable = new DefaultTableModel();
+            String sSelect = "	SELECT IdDangKy as N'Mã Đăng Ký', TenMonHoc as N'Môn Học',TenThu as N'Thứ', Buoi as N'Buổi', TietBD as N'Tiết', TenPhong as N'Phòng',  HoTen as N'Giảng Viên', TenHocKi as N'Học Kì' , SiSoHienTai as N'Số lượng Sinh Viên', SoTiet as N'Số Tiết'" +
+            "	FRom DangKy, PhongHoc,Thu,ThoiGianHoc,MonHoc,tblNguoiDung, HocKi " +
+            "	where DangKy.IdGV=tblNguoiDung.IdNguoiDung " +
+            "		  and DangKy.IdHocKi = HocKi.IdHocKi " +
+            "		  and DangKy.IdMonHoc=MonHoc.IdMonHoc " +
+            "		  and DangKy.IdThoiGian=ThoiGianHoc.IdThoiGian" +
+            "		  and DangKy.IdPhong = PhongHoc.IdPhong" +
+            "		  and DangKy.IdThu = Thu.IdThu and Status = 2 and HoTen = N'"+cbGiangVien.getSelectedItem().toString()+"'";
+            ResultSet rs = db.TruyVan(sSelect);
+            if(rs == null)
+            {
+                JOptionPane.showMessageDialog(this,"Không thể truy cập CSDL");
+                return;
+            }
+            ResultSetMetaData md = rs.getMetaData();
+            int numCols = md.getColumnCount();
+            Object []arr = new Object[numCols];
+            for(int i=0;i<numCols;i++)
+            {
+                arr[i]=md.getColumnName(i+1);  
+            }
+            modelTable.setColumnIdentifiers(arr);
+            
+            while(rs.next())
+            {
+                for(int i=0;i<numCols;i++)
+                    arr[i]=rs.getObject(i+1);
+                modelTable.addRow(arr);
+            }
+            if(modelTable.getRowCount() > 0)
+            {
+                tblLopGiangday.setModel(modelTable);
+            }
+            else
+            {
+                JOptionPane.showMessageDialog(this,"Truy vấn thất bại");
+                NapDuLieuXetMonDangKyVaoTable();
+            }
+            } catch (SQLException ex) {
+                //Logger.getLogger(MyFrame.class.getName()).log(Level.SEVERE, null, ex);
+                JOptionPane.showMessageDialog(this,"Truy cập DBConnect Thất bại");
+            }
+        }else if(cbMon.getSelectedIndex() == 0 && cbGiangVien.getSelectedIndex() == 0 && cbHocKi.getSelectedIndex() !=0)
+        {
+             try {
+            DefaultTableModel modelTable = new DefaultTableModel();
+            String sSelect = "	SELECT IdDangKy as N'Mã Đăng Ký', TenMonHoc as N'Môn Học',TenThu as N'Thứ', Buoi as N'Buổi', TietBD as N'Tiết', TenPhong as N'Phòng',  HoTen as N'Giảng Viên', TenHocKi as N'Học Kì' , SiSoHienTai as N'Số lượng Sinh Viên', SoTiet as N'Số Tiết'" +
+            "	FRom DangKy, PhongHoc,Thu,ThoiGianHoc,MonHoc,tblNguoiDung, HocKi " +
+            "	where DangKy.IdGV=tblNguoiDung.IdNguoiDung " +
+            "		  and DangKy.IdHocKi = HocKi.IdHocKi " +
+            "		  and DangKy.IdMonHoc=MonHoc.IdMonHoc " +
+            "		  and DangKy.IdThoiGian=ThoiGianHoc.IdThoiGian" +
+            "		  and DangKy.IdPhong = PhongHoc.IdPhong" +
+            "		  and DangKy.IdThu = Thu.IdThu and Status = 2 and TenHocKi = N'"+cbHocKi.getSelectedItem().toString()+"'";
+            ResultSet rs = db.TruyVan(sSelect);
+            if(rs == null)
+            {
+                JOptionPane.showMessageDialog(this,"Không thể truy cập CSDL");
+                return;
+            }
+            ResultSetMetaData md = rs.getMetaData();
+            int numCols = md.getColumnCount();
+            Object []arr = new Object[numCols];
+            for(int i=0;i<numCols;i++)
+            {
+                arr[i]=md.getColumnName(i+1);  
+            }
+            modelTable.setColumnIdentifiers(arr);
+            
+            while(rs.next())
+            {
+                for(int i=0;i<numCols;i++)
+                    arr[i]=rs.getObject(i+1);
+                modelTable.addRow(arr);
+            }
+            if(modelTable.getRowCount() > 0)
+            {
+                tblLopGiangday.setModel(modelTable);
+            }
+            else
+            {
+                JOptionPane.showMessageDialog(this,"Truy vấn thất bại");
+                NapDuLieuXetMonDangKyVaoTable();
+            }
+            } catch (SQLException ex) {
+                //Logger.getLogger(MyFrame.class.getName()).log(Level.SEVERE, null, ex);
+                JOptionPane.showMessageDialog(this,"Truy cập DBConnect Thất bại");
+            }
+        }
+        else if(cbMon.getSelectedIndex() == 0 && cbGiangVien.getSelectedIndex() == 0 && cbHocKi.getSelectedIndex() ==0)
+        {
+            NapDuLieuXetMonDangKyVaoTable();
+        }
+        else if(cbMon.getSelectedIndex() != 0 && cbGiangVien.getSelectedIndex() != 0 && cbHocKi.getSelectedIndex() !=0)
+        {
+             try {
+            DefaultTableModel modelTable = new DefaultTableModel();
+            String sSelect = "	SELECT IdDangKy as N'Mã Đăng Ký', TenMonHoc as N'Môn Học',TenThu as N'Thứ', Buoi as N'Buổi', TietBD as N'Tiết', TenPhong as N'Phòng',  HoTen as N'Giảng Viên', TenHocKi as N'Học Kì' , SiSoHienTai as N'Số lượng Sinh Viên', SoTiet as N'Số Tiết'" +
+            "	FRom DangKy, PhongHoc,Thu,ThoiGianHoc,MonHoc,tblNguoiDung, HocKi " +
+            "	where DangKy.IdGV=tblNguoiDung.IdNguoiDung " +
+            "		  and DangKy.IdHocKi = HocKi.IdHocKi " +
+            "		  and DangKy.IdMonHoc=MonHoc.IdMonHoc " +
+            "		  and DangKy.IdThoiGian=ThoiGianHoc.IdThoiGian" +
+            "		  and DangKy.IdPhong = PhongHoc.IdPhong" +
+            "		  and DangKy.IdThu = Thu.IdThu and Status = 2 and TenHocKi = N'"+cbHocKi.getSelectedItem().toString()+"' and HoTen = N'"+cbGiangVien.getSelectedItem().toString()+"' and  TenMonHoc = N'"+cbMon.getSelectedItem().toString()+"'";
+            ResultSet rs = db.TruyVan(sSelect);
+            if(rs == null)
+            {
+                JOptionPane.showMessageDialog(this,"Không thể truy cập CSDL");
+                return;
+            }
+            ResultSetMetaData md = rs.getMetaData();
+            int numCols = md.getColumnCount();
+            Object []arr = new Object[numCols];
+            for(int i=0;i<numCols;i++)
+            {
+                arr[i]=md.getColumnName(i+1);  
+            }
+            modelTable.setColumnIdentifiers(arr);
+            
+            while(rs.next())
+            {
+                for(int i=0;i<numCols;i++)
+                    arr[i]=rs.getObject(i+1);
+                modelTable.addRow(arr);
+            }
+            if(modelTable.getRowCount() > 0)
+            {
+                tblLopGiangday.setModel(modelTable);
+            }
+            else
+            {
+                JOptionPane.showMessageDialog(this,"Truy vấn thất bại");
+                NapDuLieuXetMonDangKyVaoTable();
+            }
+            } catch (SQLException ex) {
+                //Logger.getLogger(MyFrame.class.getName()).log(Level.SEVERE, null, ex);
+                JOptionPane.showMessageDialog(this,"Truy cập DBConnect Thất bại");
+            }
+        }
+        else if(cbMon.getSelectedIndex() != 0 && cbGiangVien.getSelectedIndex() != 0 && cbHocKi.getSelectedIndex() ==0)
+        {
+            try {
+            DefaultTableModel modelTable = new DefaultTableModel();
+            String sSelect = "	SELECT IdDangKy as N'Mã Đăng Ký', TenMonHoc as N'Môn Học',TenThu as N'Thứ', Buoi as N'Buổi', TietBD as N'Tiết', TenPhong as N'Phòng',  HoTen as N'Giảng Viên', TenHocKi as N'Học Kì' , SiSoHienTai as N'Số lượng Sinh Viên', SoTiet as N'Số Tiết'" +
+            "	FRom DangKy, PhongHoc,Thu,ThoiGianHoc,MonHoc,tblNguoiDung, HocKi " +
+            "	where DangKy.IdGV=tblNguoiDung.IdNguoiDung " +
+            "		  and DangKy.IdHocKi = HocKi.IdHocKi " +
+            "		  and DangKy.IdMonHoc=MonHoc.IdMonHoc " +
+            "		  and DangKy.IdThoiGian=ThoiGianHoc.IdThoiGian" +
+            "		  and DangKy.IdPhong = PhongHoc.IdPhong" +
+            "		  and DangKy.IdThu = Thu.IdThu and Status = 2 and  HoTen = N'"+cbGiangVien.getSelectedItem().toString()+"' and  TenMonHoc = N'"+cbMon.getSelectedItem().toString()+"'";
+            ResultSet rs = db.TruyVan(sSelect);
+            if(rs == null)
+            {
+                JOptionPane.showMessageDialog(this,"Không thể truy cập CSDL");
+                return;
+            }
+            ResultSetMetaData md = rs.getMetaData();
+            int numCols = md.getColumnCount();
+            Object []arr = new Object[numCols];
+            for(int i=0;i<numCols;i++)
+            {
+                arr[i]=md.getColumnName(i+1);  
+            }
+            modelTable.setColumnIdentifiers(arr);
+            
+            while(rs.next())
+            {
+                for(int i=0;i<numCols;i++)
+                    arr[i]=rs.getObject(i+1);
+                modelTable.addRow(arr);
+            }
+            if(modelTable.getRowCount() > 0)
+            {
+                tblLopGiangday.setModel(modelTable);
+            }
+            else
+            {
+                JOptionPane.showMessageDialog(this,"Truy vấn thất bại");
+                NapDuLieuXetMonDangKyVaoTable();
+            }
+            } catch (SQLException ex) {
+                //Logger.getLogger(MyFrame.class.getName()).log(Level.SEVERE, null, ex);
+                JOptionPane.showMessageDialog(this,"Truy cập DBConnect Thất bại");
+            }
+        }
+        else if(cbMon.getSelectedIndex() == 0 && cbGiangVien.getSelectedIndex() != 0 && cbHocKi.getSelectedIndex() !=0)
+        {
+            try {
+            DefaultTableModel modelTable = new DefaultTableModel();
+            String sSelect = "	SELECT IdDangKy as N'Mã Đăng Ký', TenMonHoc as N'Môn Học',TenThu as N'Thứ', Buoi as N'Buổi', TietBD as N'Tiết', TenPhong as N'Phòng',  HoTen as N'Giảng Viên', TenHocKi as N'Học Kì' , SiSoHienTai as N'Số lượng Sinh Viên', SoTiet as N'Số Tiết'" +
+            "	FRom DangKy, PhongHoc,Thu,ThoiGianHoc,MonHoc,tblNguoiDung, HocKi " +
+            "	where DangKy.IdGV=tblNguoiDung.IdNguoiDung " +
+            "		  and DangKy.IdHocKi = HocKi.IdHocKi " +
+            "		  and DangKy.IdMonHoc=MonHoc.IdMonHoc " +
+            "		  and DangKy.IdThoiGian=ThoiGianHoc.IdThoiGian" +
+            "		  and DangKy.IdPhong = PhongHoc.IdPhong" +
+            "		  and DangKy.IdThu = Thu.IdThu and Status = 2 and TenHocKi = N'"+cbHocKi.getSelectedItem().toString()+"' and HoTen = N'"+cbGiangVien.getSelectedItem().toString()+"'";
+            ResultSet rs = db.TruyVan(sSelect);
+            if(rs == null)
+            {
+                JOptionPane.showMessageDialog(this,"Không thể truy cập CSDL");
+                return;
+            }
+            ResultSetMetaData md = rs.getMetaData();
+            int numCols = md.getColumnCount();
+            Object []arr = new Object[numCols];
+            for(int i=0;i<numCols;i++)
+            {
+                arr[i]=md.getColumnName(i+1);  
+            }
+            modelTable.setColumnIdentifiers(arr);
+            
+            while(rs.next())
+            {
+                for(int i=0;i<numCols;i++)
+                    arr[i]=rs.getObject(i+1);
+                modelTable.addRow(arr);
+            }
+            if(modelTable.getRowCount() > 0)
+            {
+                tblLopGiangday.setModel(modelTable);
+            }
+            else
+            {
+                JOptionPane.showMessageDialog(this,"Truy vấn thất bại");
+                NapDuLieuXetMonDangKyVaoTable();
+            }
+            } catch (SQLException ex) {
+                //Logger.getLogger(MyFrame.class.getName()).log(Level.SEVERE, null, ex);
+                JOptionPane.showMessageDialog(this,"Truy cập DBConnect Thất bại");
+            }
+        }
+        else 
+        {
+            try {
+            DefaultTableModel modelTable = new DefaultTableModel();
+            String sSelect = "	SELECT IdDangKy as N'Mã Đăng Ký', TenMonHoc as N'Môn Học',TenThu as N'Thứ', Buoi as N'Buổi', TietBD as N'Tiết', TenPhong as N'Phòng',  HoTen as N'Giảng Viên', TenHocKi as N'Học Kì' , SiSoHienTai as N'Số lượng Sinh Viên', SoTiet as N'Số Tiết'" +
+            "	FRom DangKy, PhongHoc,Thu,ThoiGianHoc,MonHoc,tblNguoiDung, HocKi " +
+            "	where DangKy.IdGV=tblNguoiDung.IdNguoiDung " +
+            "		  and DangKy.IdHocKi = HocKi.IdHocKi " +
+            "		  and DangKy.IdMonHoc=MonHoc.IdMonHoc " +
+            "		  and DangKy.IdThoiGian=ThoiGianHoc.IdThoiGian" +
+            "		  and DangKy.IdPhong = PhongHoc.IdPhong" +
+            "		  and DangKy.IdThu = Thu.IdThu and Status = 2 and TenHocKi = N'"+cbHocKi.getSelectedItem().toString()+"' and  TenMonHoc = N'"+cbMon.getSelectedItem().toString()+"'";
+            ResultSet rs = db.TruyVan(sSelect);
+            if(rs == null)
+            {
+                JOptionPane.showMessageDialog(this,"Không thể truy cập CSDL");
+                return;
+            }
+            ResultSetMetaData md = rs.getMetaData();
+            int numCols = md.getColumnCount();
+            Object []arr = new Object[numCols];
+            for(int i=0;i<numCols;i++)
+            {
+                arr[i]=md.getColumnName(i+1);  
+            }
+            modelTable.setColumnIdentifiers(arr);
+            
+            while(rs.next())
+            {
+                for(int i=0;i<numCols;i++)
+                    arr[i]=rs.getObject(i+1);
+                modelTable.addRow(arr);
+            }
+            if(modelTable.getRowCount() > 0)
+            {
+                tblLopGiangday.setModel(modelTable);
+            }
+            else
+            {
+                JOptionPane.showMessageDialog(this,"Truy vấn thất bại");
+                NapDuLieuXetMonDangKyVaoTable();
+            }
+            } catch (SQLException ex) {
+                //Logger.getLogger(MyFrame.class.getName()).log(Level.SEVERE, null, ex);
+                JOptionPane.showMessageDialog(this,"Truy cập DBConnect Thất bại");
+            }
+        }
+    }//GEN-LAST:event_btnTimkiemActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JComboBox<String> jComboBox6;
-    private javax.swing.JComboBox<String> jComboBox7;
+    private javax.swing.JButton btnTimkiem;
+    private javax.swing.JComboBox<String> cbGiangVien;
+    private javax.swing.JComboBox<String> cbHocKi;
+    private javax.swing.JComboBox<String> cbMon;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTextField jTextField1;
     private javax.swing.JTable tblLopGiangday;
     // End of variables declaration//GEN-END:variables
 }

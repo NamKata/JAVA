@@ -42,7 +42,7 @@ public class MainAdmin extends javax.swing.JFrame {
                 int phut = lich.get(Calendar.MINUTE);
                 int giay = lich.get(Calendar.SECOND);
                 int buoi = lich.get(Calendar.AM_PM);
-                jLTime.setText(" " + gio + " : " + phut + " : " + giay+ "   "+buoi);
+                jLTime.setText(" " + gio + " : " + phut + " : " + giay+ "   ");
             }
         });
         dongho.start();
@@ -51,6 +51,9 @@ public class MainAdmin extends javax.swing.JFrame {
         jTContent.add("Trang Chủ", frm);
    }
 
+    /**
+     *
+     */
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
