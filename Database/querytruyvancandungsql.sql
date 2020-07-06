@@ -216,14 +216,14 @@
 --******************************************************
 -- Giảng Viên
 -- Thời khóa biếu
-	SELECT IdDangKy as N'Mã Đăng Ký', TenMonHoc as N'Môn Học',TenThu as N'Thứ', Buoi as N'Buổi', TietBD as N'Tiết', TenPhong as N'Phòng',   TenHocKi as N'Học Kì' , SiSoHienTai as N'Số lượng Sinh Viên', SoTiet as N'Số Tiết'
+	SELECT IdDangKy as N'Mã Đăng Ký', TenMonHoc as N'Môn Học',TenThu as N'Thứ', Buoi as N'Buổi', TietBD as N'Tiết', TenPhong as N'Phòng',   TenHocKi as N'Học Kì' , SiSoHienTai as N'Số lượng Sinh Viên', SoTiet as N'Số Tiết', NgayBatDau as N' Ngày Bắt Đầu', NgayKetThuc as N'Ngày Kết Thúc'
 	FRom DangKy, PhongHoc,Thu,ThoiGianHoc,MonHoc,tblNguoiDung, HocKi 
 	where DangKy.IdGV=tblNguoiDung.IdNguoiDung 
 		  and DangKy.IdHocKi = HocKi.IdHocKi 
 		  and DangKy.IdMonHoc=MonHoc.IdMonHoc 
 		  and DangKy.IdThoiGian=ThoiGianHoc.IdThoiGian
 		  and DangKy.IdPhong = PhongHoc.IdPhong
-		  and DangKy.IdThu = Thu.IdThu and Status = 2 and tblNguoiDung.IdNguoiDung = 1
+		  and DangKy.IdThu = Thu.IdThu and Status = 1 and tblNguoiDung.IdNguoiDung = 2
 -- Đăng Ký Môn
 	-- Nạp Phòng học vào combobox
 		SELECT TenPhong FROM PhongHoc
@@ -250,7 +250,7 @@
 --====================================================--
 -- Sinh Viên
 -- Thời khóa biểu
-	SELECT TenMonHoc as N'Môn Học',TenThu as N'Thứ', Buoi as N'Buổi', TietBD as N'Tiết', TenPhong as N'Phòng',  (SELECT Distinct HoTen From tblNguoiDung as a, DangKy b WHERE b.IdGV = a.IdNguoiDung and b.IdGV = DangKy.IdGV) as N'Giảng Viên', TenHocKi as N'Học Kì' ,  SoTiet as N'Số Tiết'
+	SELECT TenMonHoc as N'Môn Học',TenThu as N'Thứ', Buoi as N'Buổi', TietBD as N'Tiết', TenPhong as N'Phòng',  (SELECT Distinct HoTen From tblNguoiDung as a, DangKy b WHERE b.IdGV = a.IdNguoiDung and b.IdGV = DangKy.IdGV) as N'Giảng Viên', TenHocKi as N'Học Kì' ,  SoTiet as N'Số Tiết', NgayBatDau as N'Ngày Bắt Đầu', NgayKetThuc as N'Ngày Kết Thúc'
 	From DangKy,DangKyHocPhan,ThoiKhoaBieu, PhongHoc,Thu,ThoiGianHoc,MonHoc, HocKi 
 	where DangKy.IdDangKy=ThoiKhoaBieu.IdDangKy and 
 		DangKyHocPhan.IdDangKyHP = ThoiKhoaBieu.IdDangKyHP 
@@ -262,19 +262,23 @@
 		  and DangKyHocPhan.IdSV =2
 -- Đăng Ký Học Phần
 	-- nạp dữ liệu danh sách đăng ký vô table
-	SELECT IdDangKy as N'Mã Đăng Ký', TenMonHoc as N'Môn Học',TenThu as N'Thứ', Buoi as N'Buổi', TietBD as N'Tiết', TenPhong as N'Phòng',   TenHocKi as N'Học Kì' , SiSoHienTai as N'Số lượng Sinh Viên', SoTiet as N'Số Tiết',  tblNguoiDung.HoTen as N'Giảng viên'
-	FRom DangKy, PhongHoc,Thu,ThoiGianHoc,MonHoc,tblNguoiDung, HocKi 
+	SELECT IdDangKy as N'Mã Đăng Ký', TenMonHoc as N'Môn Học',TenThu as N'Thứ', Buoi as N'Buổi', TietBD as N'Tiết', TenPhong as N'Phòng',   TenHocKi as N'Học Kì', SoTinChi as N'Tín Chỉ' , (SoTien * SoTinChi) as N'Học Phí', SiSoHienTai as N'Số lượng Sinh Viên', SoTiet as N'Số Tiết',  tblNguoiDung.HoTen as N'Giảng viên', NgayBatDau as N' Ngày Bắt Đầu', NgayKetThuc as N'Ngày Kết Thúc'
+	FRom DangKy, PhongHoc,Thu,ThoiGianHoc,MonHoc,tblNguoiDung, HocKi , Khoa
 	where DangKy.IdGV=tblNguoiDung.IdNguoiDung 
 		  and DangKy.IdHocKi = HocKi.IdHocKi 
 		  and DangKy.IdMonHoc=MonHoc.IdMonHoc 
 		  and DangKy.IdThoiGian=ThoiGianHoc.IdThoiGian
 		  and DangKy.IdPhong = PhongHoc.IdPhong
-		  and DangKy.IdThu = Thu.IdThu and Status = 2
+		  and Khoa.IdKhoa = MonHoc.IdKhoa
+		  and DangKy.IdThu = Thu.IdThu and Status = 1 and TenKhoa like N'%Thông Tin%'
+    SELECT TenKhoa FROM Khoa
+	SELECT * FROM ThoiKhoaBieu
+	SELECT * FROM DangKyHocPhan
 	-- Thêm học phần
-	INSERT INTO DangKyHocPhan(IdSV,Status,HocPhi) VALUES('5','0','0')
+	INSERT INTO DangKyHocPhan(IdSV,Status,HocPhi) VALUES('6','0','0')
 	-- thêm học phần xong thì mới thêm được môn
 	-- phần học phí tý nữa add môn thì update lại
-	INSERT INTO ThoiKhoaBieu(IdDangKyHP,IdDangKyHP)VALUES('1','2')
+	INSERT INTO ThoiKhoaBieu(IdDangKy,IdDangKyHP)VALUES('1','2')
 	-- save thì làm ở trong float tong += (sotien*tinchi)
 	--update lại học phi
 	UPDATE DangKyHocPhan SET HocPhi='700000' WHERE IdDangKyHP = '2'
@@ -287,4 +291,11 @@
 	UPDATE tblNguoiDung SET HoTen = N'Nguyễn Văn B', NgaySinh='08/08/1998', DiaChi=N'700000', Sdt='0123456789' , Email='abc@gmail.com', IdTrinhDo='5' WHERE IdNguoiDung = '1'
 -- Lấy thông tin qua mã
 	SELECT * From tblNguoiDung WHERE IdNguoiDung='1'
-		
+	SELECT MaNguoiDung as N'Mã Sinh Vien', HoTen as N'Họ Tên', (SELECT TenKhoa FROM Khoa,Lop,tblNguoiDung WHERE Khoa.IdKhoa=Lop.IdLop and Lop.IdLop = tblNguoiDung.IdLop and tblNguoiDung.IdNguoiDung ='2') as N'Khoa', TenTrinhDo as N'Hệ Đào Tạo', TenLop as N'Lớp' From tblNguoiDung, Lop,  TrinhDo WHERE tblNguoiDung.IdTrinhDo = TrinhDo.IdTrinhDo and tblNguoiDung.IdLop = Lop.IdLop and tblNguoiDung.IdNguoiDung = '2'
+	SELECT HocPhi, Status FROM DangKyHocPhan WHERE IdSV =2	
+	SELECT MaNguoiDung as N'Mã Sinh Vien', HoTen as N'Họ Tên', (SELECT TenKhoa FROM Khoa,Lop,tblNguoiDung WHERE Khoa.IdKhoa=Lop.IdLop and Lop.IdLop = tblNguoiDung.IdLop and tblNguoiDung.IdNguoiDung = a.IdNguoiDung) as N'Khoa', TenTrinhDo as N'Hệ Đào Tạo', TenLop as N'Lớp' From tblNguoiDung as a, Lop,  TrinhDo WHERE a.IdTrinhDo = TrinhDo.IdTrinhDo and a.IdLop = Lop.IdLop and a.IdNguoiDung =2
+	SELECT Count(*) as N'SL' FROM DangKyHocPhan WHERE IdSV = 2
+	SELECT TenHocKi FROM HocKi
+	SELECT IdNguoiDung FROM tblNguoiDung WHERE HoTen =
+	SELECT Count(*) as N'Số Lượng' FROM DangKy WHERE IdMonHoc ='1' and IdThu ='1' and IdThoiGian = '1' and IdPhong ='1' and IdHocKi ='1'
+	SELECT DangKy.IdDangKy , MonHoc.TenMonHoc, MonHoc.SoTinChi, (MonHoc.SoTien * MonHoc.SoTinChi) , 'Đã Lưu',1 FROM DangKy,MonHoc,DangKyHocPhan, ThoiKhoaBieu WHERE DangKy.IdDangKy =ThoiKhoaBieu.IdDangKy and DangKyHocPhan.IdDangKyHP=ThoiKhoaBieu.IdDangKyHP and DangKy.IdMonHoc =MonHoc.IdMonHoc and DangKyHocPhan.IdSV =2

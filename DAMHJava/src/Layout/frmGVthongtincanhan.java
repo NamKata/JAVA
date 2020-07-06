@@ -276,6 +276,7 @@ public class frmGVthongtincanhan extends javax.swing.JPanel {
     private void btndoimatkhauActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btndoimatkhauActionPerformed
         // TODO add your handling code here:
         new MainGV().Doimatkhau();
+//        this.setVisible(false);
     }//GEN-LAST:event_btndoimatkhauActionPerformed
 
 

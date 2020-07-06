@@ -28,6 +28,7 @@ import javax.swing.WindowConstants;
 import jdk.nashorn.internal.ir.BreakNode;
 import org.netbeans.lib.awtextra.AbsoluteConstraints;
 import org.netbeans.lib.awtextra.AbsoluteLayout;
+import javax.swing.ImageIcon;
 
 /**
  *
@@ -173,7 +174,7 @@ public class DangNhap extends javax.swing.JFrame {
 
         getContentPane().add(jPLogin, new org.netbeans.lib.awtextra.AbsoluteConstraints(330, 280, 150, 40));
 
-        jLabel2.setIcon(new javax.swing.ImageIcon("C:\\Users\\Tnam1\\OneDrive\\Desktop\\JAVA\\DAMHJava\\src\\Image\\BGr.jpg")); // NOI18N
+        jLabel2.setIcon(new javax.swing.ImageIcon("C:\\Users\\Tnam1\\OneDrive\\Desktop\\JAVA\\DAMHJava\\src\\Icon\\BGr.jpg")); // NOI18N
         jLabel2.setVerticalAlignment(javax.swing.SwingConstants.BOTTOM);
         jLabel2.setAutoscrolls(true);
         jLabel2.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
@@ -215,7 +216,7 @@ public class DangNhap extends javax.swing.JFrame {
                 NameLogin = taikhoan;
                 IdTk=Integer.parseInt(rs.getObject(1).toString()) ;
                 System.err.println("Thông Tin người dùng:\n\n"+IdTk);
-                new MainAdmin().setVisible(true);
+                new MainAdminNew().setVisible(true);
                 dispose();
                 return;
             }
@@ -228,7 +229,7 @@ public class DangNhap extends javax.swing.JFrame {
                     NameLogin = taikhoan;
                     IdTk=Integer.parseInt(rs1.getObject(1).toString()) ;
                     System.err.println("Thông Tin người dùng:\n\n"+IdTk);
-                    new MainGV().setVisible(true);
+                    new MainGVNew().setVisible(true);
                     dispose();
                     return;
                 }
@@ -238,16 +239,16 @@ public class DangNhap extends javax.swing.JFrame {
                     ResultSet rs3 = db.TruyVan(sql3);
                     if(rs3.next() == true)
                     {
-                        new MainSV().setVisible(true);
+                        NameLogin = taikhoan;
+                        new MainSVNew().setVisible(true);
                         IdTk=Integer.parseInt(rs3.getObject(1).toString()) ;
                         System.err.println("Thông Tin người dùng:\n\n"+IdTk);
                         dispose();
-                        NameLogin = taikhoan;
                         return;
                     }
                     else
                     {
-                        JOptionPane.showMessageDialog(this, "Saiiiiiiiiiii!");
+                        JOptionPane.showMessageDialog(this, "Sai Tài Khoản Và Mật Khẩu!");
                         txtUser.setText("");
                         txtPass.setText("");
                         return;

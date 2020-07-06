@@ -29,7 +29,7 @@ public class Database {
         try {
             Class.forName(s_ClassName);
             con = DriverManager.getConnection(s_URL,username,password);           
-            JOptionPane.showMessageDialog(null,"Ket noi thanh cong");
+//            JOptionPane.showMessageDialog(null,"Ket noi thanh cong");
         } catch (ClassNotFoundException | SQLException ex) {
             JOptionPane.showMessageDialog(null,"Ket noi khong thanh cong!");
         }  
@@ -39,7 +39,7 @@ public class Database {
         try {
             Class.forName(s_ClassName);
             con = DriverManager.getConnection(s_URL,username,password);           
-            JOptionPane.showMessageDialog(null,"Ket noi thanh cong");
+//            JOptionPane.showMessageDialog(null,"Ket noi thanh cong");
             return true;
         } catch (ClassNotFoundException | SQLException ex) {
             JOptionPane.showMessageDialog(null,"Ket noi khong thanh cong");
@@ -73,6 +73,24 @@ public class Database {
         if(d==0)
             JOptionPane.showMessageDialog(null,"Thuc thi them xoa sua khong thanh cong:\n" + sqlCommand);
         return d;
+    }
+     public int LayID(String sqlCommand)
+    {
+        Statement st = null;
+        int d = 0; int id =0;
+        try {       
+            st = con.createStatement();
+            d = st.executeUpdate(sqlCommand, Statement.RETURN_GENERATED_KEYS);
+            ResultSet rs = st.getGeneratedKeys();
+            if (rs.next()){
+                id= Integer.parseInt(rs.getString(1)) ;
+            }
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(null,"Thuc thi them xoa sua khong thanh cong:\n" + sqlCommand);
+        }
+        if(id==0)
+            JOptionPane.showMessageDialog(null,"Thuc thi them xoa sua khong thanh cong:\n" + sqlCommand);
+        return id;
     }
     
     public boolean ThucThi(String sSQL)

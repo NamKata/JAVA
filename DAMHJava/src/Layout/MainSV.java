@@ -51,10 +51,9 @@ public class MainSV extends javax.swing.JFrame {
         jMenuItem3 = new javax.swing.JMenuItem();
         jMenu2 = new javax.swing.JMenu();
         jMenu3 = new javax.swing.JMenu();
+        jMenuHocPhi = new javax.swing.JMenu();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setUndecorated(true);
-        getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jPanel1.setBackground(new java.awt.Color(255, 102, 51));
 
@@ -91,7 +90,7 @@ public class MainSV extends javax.swing.JFrame {
                 .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 458, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLDate, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -115,25 +114,21 @@ public class MainSV extends javax.swing.JFrame {
                 .addContainerGap())
         );
 
-        getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, -1));
-
-        jTContent.setMinimumSize(new java.awt.Dimension(1055, 578));
+        jTContent.setMinimumSize(new java.awt.Dimension(0, 0));
         jTContent.setPreferredSize(new java.awt.Dimension(1055, 578));
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 1085, Short.MAX_VALUE)
+            .addGap(0, 1050, Short.MAX_VALUE)
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 533, Short.MAX_VALUE)
+            .addGap(0, 551, Short.MAX_VALUE)
         );
 
         jTContent.addTab("Giao diện", jPanel2);
-
-        getContentPane().add(jTContent, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 40, 1090, 560));
 
         jMenu1.setIcon(new javax.swing.ImageIcon("C:\\Users\\Tnam1\\OneDrive\\Desktop\\IconJava\\SV\\icons8_male_user_32px_1.png")); // NOI18N
         jMenu1.setText("Tài Khoản");
@@ -172,13 +167,50 @@ public class MainSV extends javax.swing.JFrame {
 
         jMenu2.setIcon(new javax.swing.ImageIcon("C:\\Users\\Tnam1\\OneDrive\\Desktop\\IconJava\\SV\\icons8_calendar_32px_2.png")); // NOI18N
         jMenu2.setText("Lịch Học");
+        jMenu2.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jMenu2MouseClicked(evt);
+            }
+        });
         jMenuBar1.add(jMenu2);
 
         jMenu3.setIcon(new javax.swing.ImageIcon("C:\\Users\\Tnam1\\OneDrive\\Desktop\\IconJava\\SV\\icons8_news_32px_1.png")); // NOI18N
         jMenu3.setText("Đăng Ký Học Phần");
+        jMenu3.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jMenu3MouseClicked(evt);
+            }
+        });
         jMenuBar1.add(jMenu3);
 
+        jMenuHocPhi.setIcon(new javax.swing.ImageIcon("C:\\Users\\Tnam1\\OneDrive\\Desktop\\JAVA\\DAMHJava\\src\\Image\\SV\\icons8_key_32px.png")); // NOI18N
+        jMenuHocPhi.setText("Học Phí");
+        jMenuHocPhi.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jMenuHocPhiMouseClicked(evt);
+            }
+        });
+        jMenuBar1.add(jMenuHocPhi);
+
         setJMenuBar(jMenuBar1);
+
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        getContentPane().setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jTContent, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(1, 1, 1))
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(3, 3, 3)
+                .addComponent(jTContent, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -201,6 +233,32 @@ public class MainSV extends javax.swing.JFrame {
         jTContent.removeAll();
         jTContent.add("Thay đổi mật khẩu", frm);
     }//GEN-LAST:event_jMthaydoimatkhauActionPerformed
+
+    private void jMenu2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jMenu2MouseClicked
+        // TODO add your handling code here:
+        frmThoiKhoaBieu frm = new frmThoiKhoaBieu();
+        jTContent.removeAll();
+        jTContent.add("Thời Khóa Biểu", frm);
+    }//GEN-LAST:event_jMenu2MouseClicked
+
+    private void jMenu3MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jMenu3MouseClicked
+        // TODO add your handling code here:
+        frmSVDangKyHocPhan frm = new frmSVDangKyHocPhan();
+        jTContent.removeAll();
+        jTContent.add("Đăng Ký Học Phân", frm);
+    }//GEN-LAST:event_jMenu3MouseClicked
+    public  void DongHocPhi()
+    {
+        frmDongHocPhi frm = new frmDongHocPhi();
+        jTContent.removeAll();
+        jTContent.add("Học Phí", frm);
+    }
+    private void jMenuHocPhiMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jMenuHocPhiMouseClicked
+        // TODO add your handling code here:
+        frmDongHocPhi frm = new frmDongHocPhi();
+        jTContent.removeAll();
+        jTContent.add("Học Phí", frm);
+    }//GEN-LAST:event_jMenuHocPhiMouseClicked
 
     /**
      * @param args the command line arguments
@@ -249,6 +307,7 @@ public class MainSV extends javax.swing.JFrame {
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenu jMenu3;
     private javax.swing.JMenuBar jMenuBar1;
+    private javax.swing.JMenu jMenuHocPhi;
     private javax.swing.JMenuItem jMenuItem3;
     private javax.swing.JMenuItem jMthaydoimatkhau;
     private javax.swing.JPanel jPanel1;

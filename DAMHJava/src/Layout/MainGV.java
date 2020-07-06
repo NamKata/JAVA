@@ -49,7 +49,6 @@ public class MainGV extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setUndecorated(true);
-        getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jPanel1.setBackground(new java.awt.Color(255, 102, 204));
 
@@ -86,7 +85,7 @@ public class MainGV extends javax.swing.JFrame {
                 .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 522, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(jLDate)
@@ -110,8 +109,6 @@ public class MainGV extends javax.swing.JFrame {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, -1));
-
         jTContent.setMinimumSize(new java.awt.Dimension(1055, 578));
         jTContent.setPreferredSize(new java.awt.Dimension(1055, 578));
 
@@ -127,8 +124,6 @@ public class MainGV extends javax.swing.JFrame {
         );
 
         jTContent.addTab("Giao diện", jPContainer);
-
-        getContentPane().add(jTContent, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 40, 1080, 600));
 
         jMTaiKhoanGV.setIcon(new javax.swing.ImageIcon("C:\\Users\\Tnam1\\OneDrive\\Desktop\\JAVA\\DAMHJava\\src\\Image\\GV\\icons8_user_account_32px_1.png")); // NOI18N
         jMTaiKhoanGV.setText("Tài Khoản");
@@ -185,6 +180,21 @@ public class MainGV extends javax.swing.JFrame {
 
         setJMenuBar(jMenuBar1);
 
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        getContentPane().setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jTContent, javax.swing.GroupLayout.DEFAULT_SIZE, 1080, Short.MAX_VALUE)
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(2, 2, 2)
+                .addComponent(jTContent, javax.swing.GroupLayout.PREFERRED_SIZE, 600, javax.swing.GroupLayout.PREFERRED_SIZE))
+        );
+
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
@@ -209,6 +219,9 @@ public class MainGV extends javax.swing.JFrame {
 
     private void jMDangKyLichHocMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jMDangKyLichHocMouseClicked
         // TODO add your handling code here:
+         frmGVDangKyLop frm = new frmGVDangKyLop();
+        jTContent.removeAll();
+        jTContent.add("Đăng Ký Dạy", frm);
     }//GEN-LAST:event_jMDangKyLichHocMouseClicked
 
     private void jMXemLichHocMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jMXemLichHocMouseClicked

@@ -81,7 +81,7 @@ public class frmQuanLyLopGiangDay extends javax.swing.JPanel {
 "		  and DangKy.IdMonHoc=MonHoc.IdMonHoc " +
 "		  and DangKy.IdThoiGian=ThoiGianHoc.IdThoiGian" +
 "		  and DangKy.IdPhong = PhongHoc.IdPhong" +
-"		  and DangKy.IdThu = Thu.IdThu and Status = 2";
+"		  and DangKy.IdThu = Thu.IdThu and Status = 1";
             ResultSet rs = db.TruyVan(sSelect);
             if(rs == null)
             {
@@ -153,12 +153,12 @@ public class frmQuanLyLopGiangDay extends javax.swing.JPanel {
 
         setMinimumSize(new java.awt.Dimension(1055, 578));
         setPreferredSize(new java.awt.Dimension(1055, 578));
-        setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jPanel1.setBackground(new java.awt.Color(51, 0, 204));
 
         jLabel1.setFont(new java.awt.Font("Arial", 3, 18)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel1.setText("Danh sách lớp giảng dạy");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -166,9 +166,9 @@ public class frmQuanLyLopGiangDay extends javax.swing.JPanel {
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(440, 440, 440)
-                .addComponent(jLabel1)
-                .addContainerGap(473, Short.MAX_VALUE))
+                .addGap(26, 26, 26)
+                .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(28, 28, 28))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -177,8 +177,6 @@ public class frmQuanLyLopGiangDay extends javax.swing.JPanel {
                 .addComponent(jLabel1)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
-
-        add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, -1));
 
         jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Danh sách", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Arial", 3, 13))); // NOI18N
 
@@ -253,7 +251,21 @@ public class frmQuanLyLopGiangDay extends javax.swing.JPanel {
                 .addContainerGap())
         );
 
-        add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 50, 1070, 520));
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
+        this.setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(8, 8, 8)
+                .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(8, 8, 8))
+        );
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnTimkiemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTimkiemActionPerformed
@@ -269,7 +281,7 @@ public class frmQuanLyLopGiangDay extends javax.swing.JPanel {
 "		  and DangKy.IdMonHoc=MonHoc.IdMonHoc " +
 "		  and DangKy.IdThoiGian=ThoiGianHoc.IdThoiGian" +
 "		  and DangKy.IdPhong = PhongHoc.IdPhong" +
-"		  and DangKy.IdThu = Thu.IdThu and Status = 2 and TenMonHoc = N'"+cbMon.getSelectedItem().toString()+"'";
+"		  and DangKy.IdThu = Thu.IdThu and Status = 1 and TenMonHoc = N'"+cbMon.getSelectedItem().toString()+"'";
             ResultSet rs = db.TruyVan(sSelect);
             if(rs == null)
             {
@@ -316,7 +328,7 @@ public class frmQuanLyLopGiangDay extends javax.swing.JPanel {
             "		  and DangKy.IdMonHoc=MonHoc.IdMonHoc " +
             "		  and DangKy.IdThoiGian=ThoiGianHoc.IdThoiGian" +
             "		  and DangKy.IdPhong = PhongHoc.IdPhong" +
-            "		  and DangKy.IdThu = Thu.IdThu and Status = 2 and HoTen = N'"+cbGiangVien.getSelectedItem().toString()+"'";
+            "		  and DangKy.IdThu = Thu.IdThu and Status = 1 and HoTen = N'"+cbGiangVien.getSelectedItem().toString()+"'";
             ResultSet rs = db.TruyVan(sSelect);
             if(rs == null)
             {
@@ -362,7 +374,7 @@ public class frmQuanLyLopGiangDay extends javax.swing.JPanel {
             "		  and DangKy.IdMonHoc=MonHoc.IdMonHoc " +
             "		  and DangKy.IdThoiGian=ThoiGianHoc.IdThoiGian" +
             "		  and DangKy.IdPhong = PhongHoc.IdPhong" +
-            "		  and DangKy.IdThu = Thu.IdThu and Status = 2 and TenHocKi = N'"+cbHocKi.getSelectedItem().toString()+"'";
+            "		  and DangKy.IdThu = Thu.IdThu and Status = 1 and TenHocKi = N'"+cbHocKi.getSelectedItem().toString()+"'";
             ResultSet rs = db.TruyVan(sSelect);
             if(rs == null)
             {
@@ -413,7 +425,7 @@ public class frmQuanLyLopGiangDay extends javax.swing.JPanel {
             "		  and DangKy.IdMonHoc=MonHoc.IdMonHoc " +
             "		  and DangKy.IdThoiGian=ThoiGianHoc.IdThoiGian" +
             "		  and DangKy.IdPhong = PhongHoc.IdPhong" +
-            "		  and DangKy.IdThu = Thu.IdThu and Status = 2 and TenHocKi = N'"+cbHocKi.getSelectedItem().toString()+"' and HoTen = N'"+cbGiangVien.getSelectedItem().toString()+"' and  TenMonHoc = N'"+cbMon.getSelectedItem().toString()+"'";
+            "		  and DangKy.IdThu = Thu.IdThu and Status = 1 and TenHocKi = N'"+cbHocKi.getSelectedItem().toString()+"' and HoTen = N'"+cbGiangVien.getSelectedItem().toString()+"' and  TenMonHoc = N'"+cbMon.getSelectedItem().toString()+"'";
             ResultSet rs = db.TruyVan(sSelect);
             if(rs == null)
             {
@@ -460,7 +472,7 @@ public class frmQuanLyLopGiangDay extends javax.swing.JPanel {
             "		  and DangKy.IdMonHoc=MonHoc.IdMonHoc " +
             "		  and DangKy.IdThoiGian=ThoiGianHoc.IdThoiGian" +
             "		  and DangKy.IdPhong = PhongHoc.IdPhong" +
-            "		  and DangKy.IdThu = Thu.IdThu and Status = 2 and  HoTen = N'"+cbGiangVien.getSelectedItem().toString()+"' and  TenMonHoc = N'"+cbMon.getSelectedItem().toString()+"'";
+            "		  and DangKy.IdThu = Thu.IdThu and Status = 1 and  HoTen = N'"+cbGiangVien.getSelectedItem().toString()+"' and  TenMonHoc = N'"+cbMon.getSelectedItem().toString()+"'";
             ResultSet rs = db.TruyVan(sSelect);
             if(rs == null)
             {
@@ -507,7 +519,7 @@ public class frmQuanLyLopGiangDay extends javax.swing.JPanel {
             "		  and DangKy.IdMonHoc=MonHoc.IdMonHoc " +
             "		  and DangKy.IdThoiGian=ThoiGianHoc.IdThoiGian" +
             "		  and DangKy.IdPhong = PhongHoc.IdPhong" +
-            "		  and DangKy.IdThu = Thu.IdThu and Status = 2 and TenHocKi = N'"+cbHocKi.getSelectedItem().toString()+"' and HoTen = N'"+cbGiangVien.getSelectedItem().toString()+"'";
+            "		  and DangKy.IdThu = Thu.IdThu and Status = 1 and TenHocKi = N'"+cbHocKi.getSelectedItem().toString()+"' and HoTen = N'"+cbGiangVien.getSelectedItem().toString()+"'";
             ResultSet rs = db.TruyVan(sSelect);
             if(rs == null)
             {
@@ -554,7 +566,7 @@ public class frmQuanLyLopGiangDay extends javax.swing.JPanel {
             "		  and DangKy.IdMonHoc=MonHoc.IdMonHoc " +
             "		  and DangKy.IdThoiGian=ThoiGianHoc.IdThoiGian" +
             "		  and DangKy.IdPhong = PhongHoc.IdPhong" +
-            "		  and DangKy.IdThu = Thu.IdThu and Status = 2 and TenHocKi = N'"+cbHocKi.getSelectedItem().toString()+"' and  TenMonHoc = N'"+cbMon.getSelectedItem().toString()+"'";
+            "		  and DangKy.IdThu = Thu.IdThu and Status = 1 and TenHocKi = N'"+cbHocKi.getSelectedItem().toString()+"' and  TenMonHoc = N'"+cbMon.getSelectedItem().toString()+"'";
             ResultSet rs = db.TruyVan(sSelect);
             if(rs == null)
             {
